@@ -1,5 +1,4 @@
 const dialog = electron.remote.dialog
-const recursiveReadSync = require('recursive-readdir-sync')
 const walk = require('walk')
 
 angular.module('app', ['app.services'])
@@ -32,7 +31,6 @@ angular.module('app', ['app.services'])
   $scope.settings = new SettingsProvider()
 
   $document.ready(function() {
-    debugger
     SettingsProvider.setZoom($scope.settings.layout.size)
     angular.element('.button-collapse').sideNav()
     angular.element('select').material_select()    
@@ -76,7 +74,6 @@ angular.module('app', ['app.services'])
   }
   
   $scope.addFolder = function() {
-    debugger
     let dupl = false 
     dialog.showOpenDialog({
       properties: ['openDirectory']
@@ -163,51 +160,5 @@ angular.module('app', ['app.services'])
 
       walker = walk.walkSync(folder.path, options)  
     })
-    
-  //   debugger
-  //   let files
-  //   let ext
-  //   let entry
-
-  //   $scope.settings.catalogue = []
-   
-  //   angular.forEach($scope.settings.folders, function(folder) {
-  //     if(folder.sub) {
-  //       try {
-  //         files = recursiveReadSync(folder.path)
-  //         angular.forEach(files, function(file) {
-  //           ext = path.extname(file)
-  //           if(ext) {
-  //             entry = {}
-  //             entry.path = folder.path
-  //             entry.file = file
-  //             entry.ext = ext.slice(1).toLowerCase()
-               
-  //             $scope.settings.catalogue.push(entry)          
-  //           }
-  //         }) 
-  //       } catch(err) {
-  //         if(err.errno === 34) {
-  //           console.log('Path does not exist');
-  //         } else {
-  //           throw err;
-  //         }
-  //       }
-  //     } else {
-  //       files = fs.readdirSync(folder.path)
-
-  //       angular.forEach(files, function(file) {
-  //         ext = path.extname(file)
-  //         if(ext) {
-  //           entry = {}
-  //           entry.path = folder.path
-  //           entry.file = file
-  //           entry.ext = ext.slice(1).toLowerCase()
-           
-  //           $scope.settings.catalogue.push(entry)          
-  //         }
-  //       }) 
-  //     }
-  //   })
   }
 })

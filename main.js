@@ -37,15 +37,6 @@ function registerShortcut(combination) {
 		toggleLauncherWindow()
 	})
 	appIcon.setToolTip(`Press ${keys[0]} + ${keys[1]} to start crispy fish`)
-
-	// for(var i = 0; i < appMenu.items.length; i++) {
-	// 	console.log(appMenu.items[i].label)
-	// 	if(appMenu.items[i].hasOwnProperty('id')) {
-	// 		if(appMenu.items[i].id == "launcher") {
-	// 			appMenu.items[i].accelerator = `${keys[0]}+${keys[1]}`
-	// 		} 
-	// 	}
-	// }
 }
 
 function createAppIcon() {
@@ -148,6 +139,7 @@ function createSettingsWindow() {
 			icon: path.join(__dirname, "assets/img/crispyfish.png")
 		})
 		settingsWindow.maximize()
+		settingsWindow.webContents.openDevTools()
 		settingsWindow.setMenu(null)
 		settingsWindow.loadURL(`file://${__dirname}/settings.html`)
 		settingsWindow.on('close', function(event) {
