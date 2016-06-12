@@ -1,0 +1,71 @@
+body {
+  background: #4B79A1; /* fallback for old browsers */
+  background: -webkit-linear-gradient(right, #4B79A1, #283E51);
+  background: linear-gradient(to left, #4B79A1, #283E51);
+}        
+
+.input-field label {
+  color: #0277bd;
+}
+/* label focus color */
+.input-field input[type=text]:focus + label {
+  color: #0277bd;
+}
+/* label underline focus color */
+.input-field input[type=text]:focus {
+  border-bottom: 1px solid #0277bd;
+  box-shadow: 0 1px 0 0 #b3e5fc;
+}
+/* valid color */
+.input-field input[type=text].valid {
+  border-bottom: 1px solid #000;
+  box-shadow: 0 1px 0 0 #000;
+}
+/* invalid color */
+.input-field input[type=text].invalid {
+  border-bottom: 1px solid #000;
+  box-shadow: 0 1px 0 0 #000;
+}
+/* icon prefix focus color */
+.input-field .prefix.active {
+  color: #000;
+}
+
+blockquote {
+  border-left: 5px solid #0277bd;
+}
+
+.progress {
+  background-color: #b3e5fc;
+}
+
+.progress .determinate {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  background-color: #0277bd;
+  transition: width .3s linear;
+}
+
+.switch label input[type=checkbox]:checked+.lever:after {
+  background-color: #0277bd;
+}
+
+.switch label input[type=checkbox]:checked+.lever {
+  background-color: #b3e5fc;
+}
+
+.secondary-content {
+  color: #0277bd;
+}
+
+[type="checkbox"].filled-in:checked+label:after {
+  border: 2px solid #0277bd;
+  background-color: #0277bd;
+}
+
+textarea.materialize-textarea:focus:not([readonly]) {
+  border-bottom: 1px solid #0277bd;
+  box-shadow: 0 1px 0 0 #b3e5fc;
+}

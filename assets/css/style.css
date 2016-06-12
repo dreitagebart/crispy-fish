@@ -1,0 +1,90 @@
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../lib/material-design-icons/iconfont/MaterialIcons-Regular.eot'); /* For IE6-8 */
+  src: local('Material Icons'),
+       local('MaterialIcons-Regular'),
+       url('../lib/material-design-icons/iconfont/MaterialIcons-Regular.woff2') format('woff2'),
+       url('../lib/material-design-icons/iconfont/MaterialIcons-Regular.woff') format('woff'),
+       url('../lib/material-design-icons/iconfont/MaterialIcons-Regular.ttf') format('truetype');
+}
+
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+
+h5:before { 
+  display: block; 
+  content: " "; 
+  margin-top: -100px; 
+  height: 100px; 
+  visibility: hidden; 
+}
+
+#search {
+  height: 40px;
+}
+
+#search:focus {
+  background-color: #0288d1;
+}
+ 
+.dropdown-content li a {
+  color: #0288d1;
+}
+
+.row {
+  margin-bottom: 0;
+}
+
+
+
+
+.theme.atomic {
+  background: #1A2980; /* fallback for old browsers */
+  background: -webkit-linear-gradient(to left, #1A2980 , #26D0CE); 
+  background: linear-gradient(to left, #1A2980 , #26D0CE);
+}    
+
+.theme.embrace {
+  background: #c2e59c; /* fallback for old browsers */
+  background: -webkit-linear-gradient(right, #c2e59c, #64b3f4);
+  background: linear-gradient(to left, #c2e59c, #64b3f4);
+}
+
+.theme.fever {
+  background: #f857a6; /* fallback for old browsers */
+  background: -webkit-linear-gradient(to left, #f857a6 , #ff5858);
+  background: linear-gradient(to left, #f857a6 , #ff5858);
+}        
+
+.theme.incest {
+  background: #4B79A1; /* fallback for old browsers */
+  background: -webkit-linear-gradient(right, #4B79A1, #283E51);
+  background: linear-gradient(to left, #4B79A1, #283E51);
+}        
+
+.theme.crispy {
+  background: #FFB75E; /* fallback for old browsers */
+  background: -webkit-linear-gradient(to left, #FFB75E , #ED8F03);
+  background: linear-gradient(to left, #FFB75E , #ED8F03);
+}        
+
+.theme.darken {
+  background: #485563; /* fallback for old browsers */
+  background: -webkit-linear-gradient(to left, #485563 , #29323c);
+  background: linear-gradient(to left, #485563 , #29323c);
+}   

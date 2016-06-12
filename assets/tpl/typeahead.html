@@ -1,0 +1,133 @@
+<div class="container" ng-show="task.active">
+  <blockquote>
+    <p class="flow-text">
+      <a href="" ng-click="resetTask()"><i class="material-icons">stop</i></a>
+      <a ng-hide="task.started" href="" ng-click="startTask()"><i class="material-icons">play_circle_filled</i></a>
+      <a ng-show="task.started" href="" ng-click="stopTask()"><i class="material-icons">pause_circle_filled</i></a>
+      <span class="badge">{{task.duration}} min</span>
+      <strong>{{task.name}}</strong> - 
+      <span ng-hide="task.started">timer not started</span>
+      <span ng-show="task.started">{{task.minutes}}:{{task.seconds}} left</span>
+      <a href="" ng-click="closeTask()"><i class="material-icons tiny">close</i></a>
+    </p>
+    <div class="progress">
+      <div class="determinate" ng-style="progval"></div>
+    </div>
+  </blockquote>
+</div>
+
+<div class="container">
+  <div class="row">
+  <div class="input-field">
+    <a href="" ng-click="reset()" class="prefix">
+      <i ng-hide="model" class="material-icons">search</i>
+      <i ng-show="model" class="material-icons">close</i>
+    </a>
+    <input id="typeahead" type="text" ng-model="model" placeholder="{{prompt}}" ng-keydown="shoveOn($event)">
+  </div>
+  </div>
+  <div class="row" ng-hide="!model.length || selected">
+    <div class="card-panel grey lighten-5 z-depth-1" ng-show="isNote">
+      <div class="row valign-wrapper">
+        <div class="col s2">
+          <i class="material-icons medium">note</i>
+        </div>
+        <div class="col s10">
+          <span class="black-text flow-text">
+            Hit enter to access <strong>note manager</strong>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="card-panel grey lighten-5 z-depth-1" ng-show="isMath">
+      <div class="row valign-wrapper">
+        <div class="col s2">
+          <i class="material-icons medium">plus_one</i>
+        </div>
+        <div class="col s10">
+          <span class="black-text flow-text">
+            The result of <strong>{{calc}}</strong> is <strong>{{mathResult}}</strong>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="card-panel grey lighten-5 z-depth-1" ng-show="isTask">
+      <div class="row valign-wrapper">
+        <div class="col s2">
+          <i class="material-icons medium">timer</i>
+        </div>
+        <div class="col s10">
+          <span class="black-text flow-text">
+            Hit enter to access <strong>task manager</strong>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="card-panel grey lighten-5 z-depth-1" ng-hide="filtered.length || isTask || isMath || isNote">
+      <div class="row valign-wrapper">
+        <div class="col s2">
+          <i class="material-icons medium">search</i>
+        </div>
+        <div class="col s10">
+          <span class="black-text flow-text">
+            Hit enter to google for <strong>{{model}}...</strong>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="card-panel grey lighten-5 z-depth-1" ng-repeat="item in items | filter:model as filtered track by $index" ng-click="handleSelection(item[ttitle])" style="cursor:pointer" ng-class="{'light-blue lighten-3':isCurrent($index)}" ng-mouseenter="setCurrent($index)">
+      <div class="row">
+        <div class="col s2">
+          <i class="material-icons medium">folder</i>
+        </div>
+        <div class="col s10">
+          <span class="black-text flow-text">{{item[ttitle]}}</span>
+          <br>{{item[tsubtitle]}}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--<ul class="collection" ng-hide="!model.length || selected">
+    <li class="collection-item avatar" ng-show="isNote">
+      <i class="material-icons circle">note</i>
+      <span class="flow-text">Hit enter to access <strong>note manager</strong></span>
+    </li>
+    <li class="collection-item avatar" ng-show="isMath">
+      <i class="material-icons circle">plus_one</i>
+      <span class="flow-text">The result of <strong>{{calc}}</strong> is <strong>{{mathResult}}</strong></span>
+    </li>
+    <li class="collection-item avatar" ng-show="isTask">
+      <i class="material-icons circle">timer</i>
+      <span class="flow-text">Hit enter to access <strong>task manager</strong></span>
+    </li>      
+    <li class="collection-item avatar" ng-hide="filtered.length || isTask || isMath || isNote">
+      <i class="material-icons circle">search</i>
+      <span class="flow-text">No entries found... hit enter to google for <strong>{{model}}</strong></span>
+    </li>
+    <li class="collection-item avatar" ng-repeat="item in items | filter:model as filtered track by $index" ng-click="handleSelection(item[ttitle])" style="cursor:pointer" ng-class="{'light-blue lighten-3':isCurrent($index)}" ng-mouseenter="setCurrent($index)">
+      <i class="material-icons circle">folder</i>
+      <span class="flow-text">{{item[ttitle]}}</span>
+      <p>{{item[tsubtitle]}}</p>
+    </li>
+  </ul>-->
+</div>
+
+<div id="taskmanager" class="modal">
+  <div class="modal-content">
+    <h4>Task Manager</h4>
+    <div class="input-field col s6">
+      <input id="task-name" placeholder="Name of your task" type="text" class="validate" ng-model="_task.name" autofocus>
+    </div>
+    <div>
+      <a href="" ng-click="editDuration(5)"><i class="material-icons">add</i></a>
+      <a href="" ng-click="editDuration(-5)"><i class="material-icons">remove</i></a>
+      {{_task.duration}} minutes duration
+    </div>
+  </div>
+  <div class="modal-footer">
+    <!--<a href="#" class="waves-effect waves-light btn light-green darken-3" ng-click="cancelTask()">Cancel</a>-->
+    <a href="#" class="waves-effect waves-light btn light-green" ng-click="saveTask()">Save</a>
+  </div>
+</div>
