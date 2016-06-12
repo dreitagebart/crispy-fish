@@ -36,11 +36,6 @@
               <input id="search" type="text" placeholder="Search" ng-model="search">
             </div>
           </div>
-          <!--<div class="col s4">
-            <ul class="">
-              <li><a href="" class="waves-effect waves-light tooltipped" data-position="bottom" data-delay="50" data-tooltip="refresh"><i class="material-icons">autorenew</i></a></li>
-            </ul>
-          </div>-->
         </div>
       </nav>
     </div>
@@ -53,7 +48,7 @@
               <div class="card-content">
                 <div class="row">
                   <div class="col s9">
-                    <div class="input-field col s12 m8">
+                    <div class="input-field">
                       <ul id="remindme" class="dropdown-content" style="width:250px;">
                         <li><a href="">Tomorrow<span class="badge">08:00</span></a></li>
                         <li><a href="">Next week<span class="badge">08:00</span></a></li>
@@ -69,7 +64,6 @@
                         <li><a ng-click="setColorNote('transparent')" href="" class="btn white"><i class="material-icons">format_color_reset</i></a></li>
                       </ul>
                       <a class="dropdown-button" href="" data-activates="colorize"><i class="material-icons">colorize</i></a>
-                      <input type="text" ng-model="note.title" id="note-title" placeholder="Write Note" ng-focus="isEditMode = true" ng-blur="setEditMode()"/>
                     </div>                    
                   </div>
                   <div class="col s2"><a href="" class="btn-flat" ng-class="note.color + ' lighten-3'"></a></div>
@@ -78,12 +72,17 @@
                     <a ng-show="isEditMode" href="" ng-click="resetNote()"><i class="material-icons">close</i></a>                    
                   </div>
                 </div>
+                <div class="row">
+                  <div class="col s6">
+                    <input type="text" ng-model="note.title" id="note-title" placeholder="Write Note" ng-focus="isEditMode = true" ng-blur="setEditMode()"/>
+                  </div>
+                </div>
                 <div class="row" ng-show="isEditMode">                          
                   <div class="input-field col s8">
                     <textarea ng-model="note.text" class="materialize-textarea" ng-focus="isEditMode = true" placeholder="additional text here" ng-blur="setEditMode()"></textarea>
                   </div>
                   <div class="input-field col s4">
-                    <input type="submit" class="waves-effect waves-blue btn-flat" value="Save" />
+                    <input type="submit" class="waves-effect waves-light btn light-blue darken-3" value="Save" />
                   </div>
                 </div>
               </div>
@@ -111,7 +110,7 @@
                   <i ng-show="note.color" class="material-icons medium" ng-class="note.color + '-text'">label</i>
                 </div>
                 <div class="col s10 right-align">
-                  {{note.created | moment }}
+                  <i>{{note.created | moment }}</i>
                 </div>
               </div>
             </div>
@@ -138,7 +137,7 @@
                   <i ng-show="note.color" class="material-icons" ng-class="note.color + '-text'">label</i>
                 </div>
                 <div class="col s10 right-align">
-                  {{note.created | moment }}
+                  <em>{{note.created | moment }}</em>
                 </div>
               </div>
             </div>

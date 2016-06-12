@@ -88,7 +88,6 @@ angular.module('app.services', [])
   }
 
   // public
-
   SettingsProvider.setFolder = function(folder) {
     var object = emptyFolder()
     for(key in folder) {
@@ -140,8 +139,8 @@ angular.module('app.services', [])
       folders: [],
       layout: {
         size: "100%",
-        theme: "crispy",
-        transnavbar: false
+        theme: "darken",
+        transnavbar: true
       }
     }
   }
