@@ -139,7 +139,7 @@ function createSettingsWindow() {
 			icon: path.join(__dirname, "assets/img/crispyfish.png")
 		})
 		settingsWindow.maximize()
-		settingsWindow.webContents.openDevTools()
+		// settingsWindow.webContents.openDevTools()
 		settingsWindow.setMenu(null)
 		settingsWindow.loadURL(`file://${__dirname}/settings.html`)
 		settingsWindow.on('close', function(event) {
