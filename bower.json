@@ -23,7 +23,6 @@
     "Materialize": "materialize#~0.97.6",
     "hammerjs": "hammer.js#~2.0.8",
     "angular": "~1.5.5",
-    "material-design-icons": "~2.2.3",
     "angular-marked": "~1.2.0",
     "moment": "~2.13.0",
     "angular-animate": "~1.5.6",
