@@ -1,29 +1,15 @@
-# app
+# crispy-fish
 
-> My superb app
-
-
-## Dev
-
-```
-$ npm install
+## Installation
+```shell
+npm install
+bower install
 ```
 
-### Run
-
-```
-$ npm start
-```
-
-### Build
-
-```
-$ npm run build
+## Start program
+```shell
+npm start
 ```
 
-Builds the app for OS X, Linux, and Windows, using [electron-packager](https://github.com/electron-userland/electron-packager).
-
-
-## License
-
-MIT © [<%= name %>](<%= website %>)
+## Usage
+Press `Control + Space` to show launcher.
