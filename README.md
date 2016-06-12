@@ -10,3 +10,6 @@ bower install
 ```shell
 npm start
 ```
+
+## Usage
+Press `Control + Space` to show launcher.
