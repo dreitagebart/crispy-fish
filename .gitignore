@@ -1,3 +1,6 @@
+node_modules
+assets/lib
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
