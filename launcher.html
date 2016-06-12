@@ -1,0 +1,22 @@
+<!doctype html>
+<html ng-app="app" ng-controller="LauncherCtrl">
+	<head>
+		<meta charset="utf-8">
+		<title>Launcher</title>
+		<link rel="stylesheet" href="assets/lib/Materialize/dist/css/materialize.min.css">
+		<link rel="stylesheet" href="assets/css/style.css">	
+		<link rel="stylesheet" ng-href="assets/css/{{settings.layout.theme}}.css">		
+	</head>
+	<body>
+		
+		<typeahead items="settings.catalogue" prompt="Enter your command..." ttitle="file" tsubtitle="path" model="name" on-select="onItemSelected()">
+		
+		<script>window.$ = window.jQuery = require('./assets/lib/jquery/dist/jquery.min.js')</script>
+		<script src="assets/lib/hammerjs/hammer.min.js"></script>
+		<script src="assets/lib/Materialize/dist/js/materialize.min.js"></script>
+		<script src="assets/lib/angular/angular.min.js"></script>
+		<script src="assets/lib/angular-animate/angular-animate.min.js"></script>
+		<script src="assets/js/services.js"></script>
+		<script src="assets/js/launcher.js"></script>
+	</body>
+</html>

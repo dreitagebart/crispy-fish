@@ -1,0 +1,29 @@
+<!doctype html>
+<html ng-app="app" ng-controller="SnipCtrl">
+	<head>
+		<meta charset="utf-8">
+		<title>sNIPPPPP</title>
+		<link rel="stylesheet" href="assets/lib/Materialize/dist/css/materialize.min.css">
+    <link rel="stylesheet" href="assets/lib/jcrop/css/jquery.Jcrop.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+	</head>
+	<body style="overflow:hidden;" ng-mouseup="snipIt()">
+
+    <div class="fixed-action-btn" style="top: 45px; right: 24px;">
+      <a class="waves-effect wave-light btn-floating btn-large light-blue darken-3">
+        <i class="large material-icons">check</i>
+      </a>
+    </div>
+    
+    <div ng-jcrop="obj.src" selection="obj.coords"></div>
+
+		<script>window.$ = window.jQuery = require('./assets/lib/jquery/dist/jquery.min.js')</script>
+		<script src="assets/lib/hammerjs/hammer.min.js"></script>
+		<script src="assets/lib/Materialize/dist/js/materialize.min.js"></script>
+    <script src="assets/lib/jcrop/js/jquery.Jcrop.min.js"></script>
+		<script src="assets/lib/angular/angular.min.js"></script>
+    <script src="assets/lib/ng-jcrop/ng-jcrop.js"></script>
+	  <script src="assets/js/services.js"></script>
+    <script src="assets/js/snip.js"></script>
+	</body>
+</html>

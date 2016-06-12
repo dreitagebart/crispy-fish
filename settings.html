@@ -1,0 +1,236 @@
+<!doctype html>
+<html ng-app="app" ng-controller="SettingsCtrl">
+	<head>
+		<meta charset="utf-8">
+		<title>Settings</title>
+		<link rel="stylesheet" href="assets/lib/Materialize/dist/css/materialize.min.css">
+		<link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" ng-href="assets/css/{{settings.layout.theme}}.css">	
+	</head>
+	<body>
+    <div class="navbar-fixed">
+      <nav class="theme" ng-class="settings.layout.transNavBar ? settings.layout.theme : ''">
+        <div class="nav-wrapper container">
+          <a href="#" class="brand-logo">Settings</a>
+          <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+          <ul class="right hide-on-med-and-down">
+            <li><a href="#general">General</a></li>
+            <li><a href="#catalogue">Catalogue</a></li>
+            <li><a href="#task">Tasks</a></li>
+            <li><a href="#layout">Layout</a></li>
+          </ul>
+          <ul class="side-nav" id="mobile-demo">
+            <li><a href="#general">General</a></li>
+            <li><a href="#catalogue">Catalogue</a></li>
+            <li><a href="#task">Tasks</a></li>
+            <li><a href="#layout">Layout</a></li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+    <div class="container section">
+      <div class="row">
+        <div class="col s12 m8">
+          <div class="card">
+            <div class="card-content">
+              <h5 id="general">General</h5>
+              <div class="divider"></div>
+              <div class="section">
+                <div class="row">
+                  <div class="col s9 flow-text">
+                    Launch <strong>crispy fish</strong> automatically when operating system starts?
+                  </div>
+                  <div class="col s3 flow-text">
+                    <div class="switch row">
+                      <label>
+                      No
+                      <input type="checkbox" ng-model="settings.general.autolaunch">
+                      <span class="lever"></span>
+                      Yes
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <p class="section flow-text">Here you can set your shortcut key combination to start the launcher immediately.</p>
+              <div class="row">
+                <div class="input-field col m4 s6">
+                  <select ng-model="settings.general.shcut[0]">
+                    <option value="" disabled selected>first key</option>
+                    <option ng-value="Control" value="Control">Control</option>
+                    <option value="Alt">Alt</option>
+                    <option value="AltGr">Alt Gr</option>
+                    <option value="Shift">Shift</option>
+                    <option value="Super">Windows</option>
+                    <option value="Control+Alt">Control + Alt</option>
+                    <option value="Control+Shift">Control + Shift</option>
+                    <option value="Control+Super">Control + Windows</option>   
+                  </select>
+                  <label>first key</label>
+                </div>
+                <div class="input-field col m4 s6">
+                  <select ng-model="settings.general.shcut[1]">
+                    <option value="" disabled selected>second key</option>
+                    <option ng-value="Space" value="Space">Space</option>
+                    <option value="Tab">Tab</option>
+                    <option value="Backspace">Backspace</option>
+                    <option value="Delete">Delete</option>
+                    <option value="Insert">Insert</option>
+                    <option value="Enter">Enter</option>
+                    <option value="Escape">Escape</option>
+                  </select>
+                  <label>second key</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col s12 m8">
+          <div class="card">
+            <div class="card-content">
+              <h5 id="catalogue">Catalogue</h5>
+              <div class="divider"></div>
+              <p class="section flow-text">The catalogue is your whole index where all files are listed. You have currently <strong><span ng-show="settings.catalogue.length == 0">no</span><span ng-show="settings.catalogue.length != 0">{{settings.catalogue.length}}</span> files</strong> in your catalogue.</p>
+              <ul class="collection">
+                <li class="collection-item avatar" ng-repeat="folder in settings.folders track by $index">
+                  <i class="material-icons circle">folder</i>
+                  <span class="title">{{folder.path}}</span>
+                  <br />
+                  <input type="checkbox" class="filled-in" id="folder{{$index+1}}" checked="checked" ng-model="folder.dir" />
+                  <label for="folder{{$index+1}}">list folder</label>
+                  <br />
+                  <a href="#modal1" ng-click="editExt($index)">extensions</a>
+                  <span ng-repeat="extension in folder.ext"><div class="chip">{{extension}}</div> </span>
+                  <a href="" class="secondary-content" ng-click="deleteFolder($index)"><i class="material-icons">delete</i></a>
+                </li>
+              </ul>
+            </div>
+            <div class="card-action">
+              <a class="waves-effect waves-light btn light-green" ng-click="addFolder()"><i class="material-icons left">create_new_folder</i>Add Folder</a>          
+              <a class="waves-effect waves-light btn light-green" ng-click="refreshCat()"><i class="material-icons left">cached</i>Refresh catalogue</a>
+            </div>            
+          </div>
+        </div>
+      </div>      
+      <div class="row">
+        <div class="col s12 m8">
+          <div class="card" id="catalogue">
+            <div class="card-content">
+              <h5 id="task">Tasks</h5>
+              <p class="section flow-text">You can access task manager by typing <strong>task</strong> into command line.</p>
+              <div class="row">
+                <div class="col s8">
+                  <select ng-model="settings.task.sound">
+                    <option value="" disabled selected>notification</option>
+                    <option ng-repeat="sound in sounds" value="{{sound}}">{{sound}}</option>
+                  </select>
+                </div>
+                <div class="col s4">
+                  <a href="" class="waves-effect waves-light btn light-green" ng-click="playSound(settings.task.notification)"><i class="material-icons">volume_up</i></a>                  
+                </div>
+              </div>
+              <div class="row">
+                <div class="col s9 flow-text">
+                  Do you want to get notified by a notification popup in taskbar?
+                </div>
+                <div class="col s3 flow-text">
+                  <div class="switch row">
+                    <label>
+                    No
+                    <input type="checkbox" ng-model="settings.task.notify">
+                    <span class="lever"></span>
+                    Yes
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col s12 m8">
+          <div class="card">
+            <div class="card-content">
+              <h5 id="layout">Layout</h5>
+              <div class="divider"></div>
+              <div class="row section">
+                <div class="col s9 flow-text">Transparent navigation bar?</div>
+                <div class="col s3">
+                  <div class="switch row flow-text">
+                    <label>
+                    No
+                    <input type="checkbox" ng-model="settings.layout.transNavBar">
+                    <span class="lever"></span>
+                    Yes
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <p class="section">Choose theme</p>
+              <div class="row">
+               <a ng-click="switchTheme('atomic')" data-position="bottom" data-delay="50" data-tooltip="atomic" href="" class="tooltipped btn-flat theme atomic white-text"></a>
+               <a ng-click="switchTheme('incest')" data-position="bottom" data-delay="50" data-tooltip="incest" href="" class="tooltipped btn-flat theme incest white-text"></a>
+               <a ng-click="switchTheme('embrace')" data-position="bottom" data-delay="50" data-tooltip="embrace" href="" class="tooltipped btn-flat theme embrace white-text"></a>
+               <a ng-click="switchTheme('fever')" data-position="bottom" data-delay="50" data-tooltip="fever" href="" class="tooltipped btn-flat theme fever white-text"></a>
+               <a ng-click="switchTheme('crispy')" data-position="bottom" data-delay="50" data-tooltip="crispy" href="" class="tooltipped btn-flat theme crispy white-text"></a>
+               <a ng-click="switchTheme('darken')" data-position="bottom" data-delay="50" data-tooltip="darken" href="" class="tooltipped btn-flat theme darken white-text"></a>
+              </div>
+              <div class="row section">
+                <div class="col s2">Total size</div>
+                <div class="col s10"> 
+                  <a class="btn-floating light-blue darken-3" ng-click="setZoom(-10)" ng-class="zoom <= 60 ? 'disabled' : ''"><i class="material-icons">zoom_out</i></a>
+                  <a class="btn-floating light-blue darken-3" ng-click="setZoom(10)" ng-class="zoom >= 160 ? 'disabled' : ''"><i class="material-icons">zoom_in</i></a>    
+                  <span class="flow-text"> {{settings.layout.size}}</span>           
+                </div>
+              </div>
+              <div class="row section">
+                <div class="col s5">lskjdlskj</div>
+              </div>              
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row section">
+        <a href="" class="waves-effect waves-light btn light-green" ng-click="saveSettings()">Save</a>
+        <a href="" class="waves-effect waves-light btn light-green darken-3" ng-click="cancelSettings()">Cancel</a>
+      </div>
+    </div>
+    
+    <div id="extmodal" class="modal">
+      <div class="modal-content">
+        <h4>Edit extensions</h4>
+        <input type="text" placeholder="Type in your extension name, e. g. exe, lnk, pdf" ng-keypress="($event.which === 13)?addExt(fileext):0" ng-model="fileext" autofocus>
+        <span ng-repeat="ext in exts"><div class="chip">{{ext}}<i class="material-icons" ng-click="deleteExt($index)">close</i></div> </span>
+      </div>
+      <div class="modal-footer">
+        <a href="" class="waves-effect waves-light btn light-green" ng-click="saveExt()">Save</a>
+      </div>
+    </div>
+    
+    <div id="askforsave" class="modal">
+      <div class="modal-content">
+        <h4>Hey,</h4>
+        <p>do you want to save your changes made by you?</p>
+      </div>
+      <div class="modal-footer">
+        <a href="" class="waves-effect waves-light btn light-green" ng-click="saveSettings()">Yes</a>
+        <a href="" class="waves-effect waves-light btn light-green darken-3" ng-click="cancelSettings(true)">No</a>
+      </div>
+    </div>
+    
+		<script>window.$ = window.jQuery = require('./assets/lib/jquery/dist/jquery.min.js')</script>
+		<script src="assets/lib/hammerjs/hammer.min.js"></script>
+		<script src="assets/lib/Materialize/dist/js/materialize.min.js"></script>
+		<script src="assets/lib/angular/angular.min.js"></script>
+	  <script src="assets/js/services.js"></script>
+    <script src="assets/js/settings.js"></script>
+	</body>
+</html>
+
+
+
+
+

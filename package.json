@@ -1,0 +1,47 @@
+{
+  "name": "crispyfish",
+  "productName": "crispyfish",
+  "version": "1.0.0",
+  "main": "main.js",
+  "description": "Something stupid application launcher and more useful tools",
+  "license": "MIT",
+  "repository": "user/repo",
+  "author": {
+    "name": "fred",
+    "email": "",
+    "url": ""
+  },
+  "scripts": {
+    "test": "xo",
+    "start": "electron .",
+    "build": "electron-packager . --out=dist --prune --overwrite --platform=win32 --arch=x64"
+  },
+  "keywords": [
+    "electron-app",
+    "electron"
+  ],
+  "dependencies": {
+    "auto-launch": "^2.0.1",
+    "cropng": "^0.1.1",
+    "electron-debug": "^1.0.0",
+    "electron-is-dev": "^0.1.1",
+    "marked": "^0.3.5",
+    "mathjs": "^3.2.1",
+    "node-notifier": "^4.6.0",
+    "walk": "^2.3.9"
+  },
+  "devDependencies": {
+    "devtron": "^1.1.2",
+    "electron-packager": "^7.0.0",
+    "electron-prebuilt": "^1.0.1",
+    "gulp": "^3.9.1",
+    "xo": "^0.15.0"
+  },
+  "xo": {
+    "esnext": true,
+    "envs": [
+      "node",
+      "browser"
+    ]
+  }
+}

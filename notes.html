@@ -1,0 +1,159 @@
+<!doctype html>
+<html ng-app="app" ng-controller="NotesCtrl">
+	<head>
+		<meta charset="utf-8">
+		<title>Notes</title>
+		<link rel="stylesheet" href="assets/lib/Materialize/dist/css/materialize.min.css">
+		<link rel="stylesheet" href="assets/css/style.css">	
+    <link rel="stylesheet" ng-href="assets/css/{{settings.layout.theme}}.css">		
+	</head>
+	<body>
+
+    <div class="fixed-action-btn horizontal" style="top: 110px; right: 40px;">
+      <a class="btn-floating btn-large light-blue darken-3">
+        <i class="material-icons">menu</i>
+      </a>
+      <ul>
+        <li><a class="btn-floating light-blue darken-3 tooltipped" ng-click="newNote()" data-position="bottom" data-delay="50" data-tooltip="add note"><i class="material-icons">note_add</i></a></li>
+        <li>
+          <a ng-show="layout=='list'" class="btn-floating light-blue darken-1 tooltipped" ng-click="switchLayout()" data-position="bottom" data-delay="50" data-tooltip="switch to block layout"><i class="material-icons">view_module</i></a>
+          <a ng-show="layout=='block'" class="btn-floating light-blue darken-1 tooltipped" ng-click="switchLayout()" data-position="bottom" data-delay="50" data-tooltip="switch to list layout"><i class="material-icons">list</i></a>
+        </li>
+        <li><a class="btn-floating light-blue lighten-1"><i class="material-icons">publish</i></a></li>
+        <li><a class="btn-floating light-blue lighten-3"><i class="material-icons">attach_file</i></a></li>
+      </ul>
+    </div>
+
+    <div class="navbar">
+      <nav class="light-blue darken-3 theme" ng-class="settings.layout.transNavBar ? settings.layout.theme : ''">
+        <div class="nav-wrapper container">
+          <div class="row">
+            <div class="input-field col s6">
+              <a href="" ng-click="resetSearch()" class="prefix">
+                <i ng-hide="search" class="material-icons">search</i>
+                <i ng-show="search" class="material-icons">close</i>
+              </a>
+              <input id="search" type="text" placeholder="Search" ng-model="search">
+            </div>
+          </div>
+          <!--<div class="col s4">
+            <ul class="">
+              <li><a href="" class="waves-effect waves-light tooltipped" data-position="bottom" data-delay="50" data-tooltip="refresh"><i class="material-icons">autorenew</i></a></li>
+            </ul>
+          </div>-->
+        </div>
+      </nav>
+    </div>
+
+		<div class="container">
+      <form ng-submit="addNote()">
+        <div class="row">
+          <div class="col s10 m8">
+            <div class="card">
+              <div class="card-content">
+                <div class="row">
+                  <div class="col s9">
+                    <div class="input-field col s12 m8">
+                      <ul id="remindme" class="dropdown-content" style="width:250px;">
+                        <li><a href="">Tomorrow<span class="badge">08:00</span></a></li>
+                        <li><a href="">Next week<span class="badge">08:00</span></a></li>
+                        <li><a href="">choose date and time<span class="badge"><i class="material-icons">date_range</i></span></a></li>
+                      </ul>
+                      <a class="dropdown-button" href="" data-activates="remindme"><i class="material-icons">date_range</i></a>
+                      <ul id="colorize" class="dropdown-content" style="width:250px;">
+                        <li><a ng-click="setColorNote('green')" href="" class="btn green lighten-3"></a></li>
+                        <li><a ng-click="setColorNote('yellow')" href="" class="btn yellow lighten-3"></a></li>
+                        <li><a ng-click="setColorNote('blue')" href="" class="btn blue lighten-3"></a></li>
+                        <li><a ng-click="setColorNote('red')" href="" class="btn red lighten-3"></a></li>
+                        <li><a ng-click="setColorNote('pink')" href="" class="btn pink lighten-3"></a></li>
+                        <li><a ng-click="setColorNote('transparent')" href="" class="btn white"><i class="material-icons">format_color_reset</i></a></li>
+                      </ul>
+                      <a class="dropdown-button" href="" data-activates="colorize"><i class="material-icons">colorize</i></a>
+                      <input type="text" ng-model="note.title" id="note-title" placeholder="Write Note" ng-focus="isEditMode = true" ng-blur="setEditMode()"/>
+                    </div>                    
+                  </div>
+                  <div class="col s2"><a href="" class="btn-flat" ng-class="note.color + ' lighten-3'"></a></div>
+                  <div class="col s1">
+                    <i ng-hide="isEditMode" class="material-icons">close</i>
+                    <a ng-show="isEditMode" href="" ng-click="resetNote()"><i class="material-icons">close</i></a>                    
+                  </div>
+                </div>
+                <div class="row" ng-show="isEditMode">                          
+                  <div class="input-field col s8">
+                    <textarea ng-model="note.text" class="materialize-textarea" ng-focus="isEditMode = true" placeholder="additional text here" ng-blur="setEditMode()"></textarea>
+                  </div>
+                  <div class="input-field col s4">
+                    <input type="submit" class="waves-effect waves-blue btn-flat" value="Save" />
+                  </div>
+                </div>
+              </div>
+            </div>          
+          </div>
+        </div>
+      </form>
+      
+      <div class="row" ng-show="layout=='block'">
+        <div class="col s4" ng-repeat="note in notes | orderBy:'-created' | filter : search track by $index">
+          <div class="card hoverable" ng-mouseover="note.edit = true" ng-mouseleave="note.edit = false">
+            <div class="card-content">
+              <div class="row">
+                <div class="col s10" ng-dblclick="setEdit()">
+                  <span class="flow-text">{{note.title}}</span>
+                </div>
+                <div class="col s1">
+                  <a ng-show="note.edit" href="" ng-click="deleteNote(note.created)"><i class="material-icons">close</i></a>
+                </div>                
+              </div>
+              <p class="section" ng-show="note.text">{{note.text}}</p>
+              <div class="row">
+                <div class="col s2">
+                  <i ng-hide="note.color" class="material-icons white-text">label</i>
+                  <i ng-show="note.color" class="material-icons medium" ng-class="note.color + '-text'">label</i>
+                </div>
+                <div class="col s10 right-align">
+                  {{note.created | moment }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="row" ng-show="layout=='list'" ng-repeat="note in notes | orderBy:'-created' track by $index">
+        <div class="col s12 m8">
+          <div class="card hoverable" ng-mouseover="note.edit = true" ng-mouseleave="note.edit = false">
+            <div class="card-content">
+              <div class="row">
+                <div class="col s11">
+                  <span class="flow-text"><small>{{note.title}}</small></span>
+                </div>
+                <div class="col s1">
+                  <a ng-show="note.edit" href="" ng-click="deleteNote(note.created)"><i class="material-icons">close</i></a>
+                </div>                
+              </div>
+              <p class="section" ng-show="note.text">{{note.text}}</p>
+              <div class="row">
+                <div class="col s2">
+                  <i ng-hide="note.color" class="material-icons white-text">label</i>
+                  <i ng-show="note.color" class="material-icons" ng-class="note.color + '-text'">label</i>
+                </div>
+                <div class="col s10 right-align">
+                  {{note.created | moment }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+		
+		<script>window.$ = window.jQuery = require('./assets/lib/jquery/dist/jquery.min.js')</script>
+		<script src="assets/lib/hammerjs/hammer.min.js"></script>
+		<script src="assets/lib/Materialize/dist/js/materialize.min.js"></script>
+		<script src="assets/lib/angular/angular.min.js"></script>
+    <script src="assets/lib/angular-animate/angular-animate.min.js"></script>
+    <script src="assets/lib/moment/min/moment.min.js"></script>
+		<script src="assets/js/services.js"></script>
+		<script src="assets/js/notes.js"></script>
+	</body>
+</html>

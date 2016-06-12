@@ -1,0 +1,34 @@
+<!doctype html>
+<html ng-app="app">
+	<head>
+		<meta charset="utf-8">
+		<title>Help</title>
+		<link rel="stylesheet" href="assets/lib/Materialize/dist/css/materialize.min.css">
+		<link rel="stylesheet" href="assets/css/style.css">		
+	</head>
+	<body ng-controller="HelpCtrl">
+
+    <nav class="light-blue darken-3">
+      <div class="nav-wrapper container">
+        <a href="#" class="brand-logo">Crispy Fish Documentation</a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+          <li><a href="#">Feedback</a></li>
+          <li><a href="#">View on the web</a></li>
+        </ul>
+      </div>
+    </nav>
+    <div class="container section">
+      <div class="card">
+        <div class="card-content" marked src="'assets/doc/help.md'"></div>
+      </div>
+    </div>
+    
+		<script>window.$ = window.jQuery = require('./assets/lib/jquery/dist/jquery.min.js')</script>
+    <script src="assets/lib/hammerjs/hammer.min.js"></script>
+		<script src="assets/lib/Materialize/dist/js/materialize.min.js"></script>
+		<script src="assets/lib/angular/angular.min.js"></script>
+    <script src="assets/lib/marked/lib/marked.js"></script>
+    <script src="assets/lib/angular-marked/dist/angular-marked.min.js"></script>
+    <script src="assets/js/help.js"></script>
+	</body>
+</html>
