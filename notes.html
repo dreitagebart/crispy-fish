@@ -28,7 +28,7 @@
       <nav class="light-blue darken-3 theme" ng-class="settings.layout.transNavBar ? settings.layout.theme : ''">
         <div class="nav-wrapper container">
           <div class="row">
-            <div class="input-field col s6">
+            <div class="input-field col s6 right-align">
               <a href="" ng-click="resetSearch()" class="prefix">
                 <i ng-hide="search" class="material-icons">search</i>
                 <i ng-show="search" class="material-icons">close</i>
@@ -45,9 +45,10 @@
         <div class="row">
           <div class="col s10 m8">
             <div class="card">
-              <div class="card-content">
+              <a ng-show="isEditMode" class="close" href="" ng-click="resetNote()"><i class="material-icons">close</i></a>
+              <div class="card-content" ng-class="note.color != '' ? note.color + ' lighten-2' : ''">
                 <div class="row">
-                  <div class="col s9">
+                  <div class="col s10">
                     <div class="input-field">
                       <ul id="remindme" class="dropdown-content" style="width:250px;">
                         <li><a href="">Tomorrow<span class="badge">08:00</span></a></li>
@@ -55,31 +56,28 @@
                         <li><a href="">choose date and time<span class="badge"><i class="material-icons">date_range</i></span></a></li>
                       </ul>
                       <a class="dropdown-button" href="" data-activates="remindme"><i class="material-icons">date_range</i></a>
-                      <ul id="colorize" class="dropdown-content" style="width:250px;">
-                        <li><a ng-click="setColorNote('green')" href="" class="btn green lighten-3"></a></li>
-                        <li><a ng-click="setColorNote('yellow')" href="" class="btn yellow lighten-3"></a></li>
-                        <li><a ng-click="setColorNote('blue')" href="" class="btn blue lighten-3"></a></li>
-                        <li><a ng-click="setColorNote('red')" href="" class="btn red lighten-3"></a></li>
-                        <li><a ng-click="setColorNote('pink')" href="" class="btn pink lighten-3"></a></li>
-                        <li><a ng-click="setColorNote('transparent')" href="" class="btn white"><i class="material-icons">format_color_reset</i></a></li>
+                      <ul id="colorize" class="dropdown-content" style="width:100px;">
+                        <li>
+                          <a ng-click="setColorNote('')" href="" class="white"></a>
+                          <a ng-click="setColorNote('green')" href="" class="green lighten-2"></a>
+                          <a ng-click="setColorNote('yellow')" href="" class="yellow lighten-2"></a>
+                          <a ng-click="setColorNote('blue')" href="" class="blue lighten-2"></a>
+                          <a ng-click="setColorNote('red')" href="" class="red lighten-2"></a>
+                          <a ng-click="setColorNote('pink')" href="" class="pink lighten-2"></a>
+                        </li>
                       </ul>
                       <a class="dropdown-button" href="" data-activates="colorize"><i class="material-icons">colorize</i></a>
                     </div>                    
                   </div>
-                  <div class="col s2"><a href="" class="btn-flat" ng-class="note.color + ' lighten-3'"></a></div>
-                  <div class="col s1">
-                    <i ng-hide="isEditMode" class="material-icons">close</i>
-                    <a ng-show="isEditMode" href="" ng-click="resetNote()"><i class="material-icons">close</i></a>                    
-                  </div>
                 </div>
                 <div class="row">
                   <div class="col s6">
-                    <input type="text" ng-model="note.title" id="note-title" placeholder="Write a note" ng-focus="isEditMode = true" ng-blur="setEditMode()"/>
+                    <input type="text" ng-model="note.title" id="note-title" placeholder="Write a note" ng-focus="isEditMode = true" />
                   </div>
                 </div>
                 <div class="row" ng-show="isEditMode">                          
                   <div class="input-field col s8">
-                    <textarea ng-model="note.text" class="materialize-textarea" ng-focus="isEditMode = true" placeholder="additional text here" ng-blur="setEditMode()"></textarea>
+                    <textarea ng-model="note.text" class="materialize-textarea" ng-focus="isEditMode = true" placeholder="additional text here"></textarea>
                   </div>
                   <div class="input-field col s4">
                     <input type="submit" class="waves-effect waves-light btn light-blue darken-3" value="Save" />
@@ -93,26 +91,16 @@
       
       <div class="row" ng-show="layout=='block'">
         <div class="col s4" ng-repeat="note in notes | orderBy:'-created' | filter : search track by $index">
-          <div class="card hoverable" ng-mouseover="note.edit = true" ng-mouseleave="note.edit = false">
+          <div class="card hoverable" ng-class="note.color != '' ? note.color + ' lighten-2' : ''" ng-mouseover="note.edit = true" ng-mouseleave="note.edit = false">
+            <a ng-show="note.edit" class="close" href="" ng-click="deleteNote(note.id)"><i class="material-icons">close</i></a>
             <div class="card-content">
               <div class="row">
-                <div class="col s10" ng-dblclick="setEdit()">
+                <div class="col s11" ng-dblclick="setEdit()">
                   <span class="flow-text">{{note.title}}</span>
                 </div>
-                <div class="col s1">
-                  <a ng-show="note.edit" href="" ng-click="deleteNote(note.created)"><i class="material-icons">close</i></a>
-                </div>                
               </div>
               <p class="section" ng-show="note.text">{{note.text}}</p>
-              <div class="row">
-                <div class="col s2">
-                  <i ng-hide="note.color" class="material-icons white-text">label</i>
-                  <i ng-show="note.color" class="material-icons medium" ng-class="note.color + '-text'">label</i>
-                </div>
-                <div class="col s10 right-align">
-                  <i>{{note.created | moment }}</i>
-                </div>
-              </div>
+              <div class="right-align"><i>{{note.created | moment }}</i></div>
             </div>
           </div>
         </div>

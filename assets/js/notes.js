@@ -6,7 +6,7 @@ angular.module('app', ['app.services', 'ngAnimate'])
     }
 })
 
-.controller('NotesCtrl', function($scope, SettingsProvider, NotesProvider, $document) {
+.controller('NotesCtrl', function($scope, SettingsProvider, NotesProvider, $document, $timeout) {
   
   $document.ready(function() {
     SettingsProvider.setZoom($scope.settings.layout.size)
@@ -22,6 +22,8 @@ angular.module('app', ['app.services', 'ngAnimate'])
   })
 
   $scope.search = ""
+
+  $scope.note = {}
 
   $scope.resetSearch = function() {
     angular.element('#search').focus()
@@ -62,7 +64,11 @@ angular.module('app', ['app.services', 'ngAnimate'])
 
   $scope.settings = new SettingsProvider()
 
-  $scope.notes = new NotesProvider()
+  new NotesProvider().then(function(notes) {
+    $timeout(function() {
+      $scope.notes = notes
+    }, 0)
+  })
   
   $scope.resetNote = function() {
     $scope.note = {}
@@ -76,29 +82,28 @@ angular.module('app', ['app.services', 'ngAnimate'])
   }
 
   $scope.setColorNote = function(value) {
+    debugger
     $scope.note.color = value
   }
 
   $scope.addNote = function() {
-    var note = NotesProvider.setNote($scope.note)
-
+    var note = NotesProvider.addNote($scope.note)
     $scope.notes.push(note)
-    NotesProvider.commit($scope.notes)
-
-    $scope.newNote()
-
+    $scope.resetNote()
     var $toastContent = $('<span>Note added...</span>')
     Materialize.toast($toastContent, 6000)
   }
   
-  $scope.deleteNote = function(created) {
+  $scope.deleteNote = function(id) {
     var index = 0
-    angular.forEach($scope.settings.notes, function(note) {
-      if(created === note.created) return $scope.settings.notes.splice(index, 1)
-      index++ 
+    NotesProvider.deleteNote(id)
+    angular.forEach($scope.notes, function(note) {
+      if(note.id === id) {
+        $scope.notes.splice(index, 1)
+        return
+      }
+      index++
     })
-    
-    NotesProvider.commit($scope.notes)
 
     var $toastContent = $('<span>Note deleted...</span>')
     Materialize.toast($toastContent, 6000)

@@ -9,62 +9,50 @@ const fs = require('fs')
 
 angular.module('app.services', [])
 
-.factory('NotesProvider', function() {
+.factory('NotesProvider', function($q) {
+  
   var NotesProvider
   var key
-  var noteId = 0
+  const Dexie = require('dexie')
+  var db = new Dexie('crispydb')
+
+  db.version(1).stores({
+    notes: '++id, created, title, text, color, done'
+  })
+
+  db.open().catch(function(error) {
+    console.log("Open failed: " + error)
+  })
 
   // constructor
   NotesProvider = function() {
-    this.notes = getNotes()
-    noteId = this.notes.length
-    return this.notes
+    var notes = db.notes.toArray()
+    return notes
   }
 
   // public
-  NotesProvider.getId = function() {
-    return ++noteId
-  }
-
-  NotesProvider.commit = function(notes) {
-    if(!notes) return
-    localStorage.setItem('cf-notes', JSON.stringify(notes))
-  }
-
-  NotesProvider.setNote = function(note) {
-    var object = emptyNote()
+  NotesProvider.addNote = function(note) {
+    var object = getNoteObject()
     for(key in note) {
       if(note.hasOwnProperty(key)) object[key] = note[key]
-    }  
+    } 
+    db.notes.put(object)
     return object
+  } 
+
+  NotesProvider.deleteNote = function(id) {
+    db.notes.where('id').equals(id).delete()
   }
 
   // private
-  function bootstrap() {
-    return [{
-      id: NotesProvider.getId(),
-      title: "First Note",
-      text: "Here is your first note. You can delete it by clicking the close button on the upper right side",
-      type: "text",
-      created: Date.now()
-    }]
-  }
-
-  function emptyNote() {
+  function getNoteObject() {
     return {
-      id: NotesProvider.getId(),
       title: "",
       text: "",
       type: "text",
       color: "",
       created: Date.now()
     }
-  }
-
-  function getNotes() {
-    var value = localStorage.getItem('cf-notes')
-    if(!value) return bootstrap()
-    return JSON.parse(value) 
   }
 
   // return object

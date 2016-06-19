@@ -23,6 +23,7 @@
   "dependencies": {
     "auto-launch": "^2.0.1",
     "cropng": "^0.1.1",
+    "dexie": "^1.4.1",
     "electron-debug": "^1.0.0",
     "electron-is-dev": "^0.1.1",
     "marked": "^0.3.5",

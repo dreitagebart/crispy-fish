@@ -151,8 +151,10 @@ function createSettingsWindow() {
 function createNotesWindow() {
 	if(!notesWindow) {
 		notesWindow = new BrowserWindow({
-			width: 600,
-			height: 400,
+			width: 800,
+			height: 600,
+			minWidth: 800,
+			minHeight: 600,
 			icon: path.join(__dirname, "assets/img/crispyfish.png")
 		})
 		notesWindow.maximize()
