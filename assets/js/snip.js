@@ -26,7 +26,7 @@ angular.module('app', ['app.services', 'ngJcrop'])
 
   $scope.snipIt = function(fullscreen) {
     if(fullscreen) {
-      clipboard.writeImage(nativeImage.createFromPath('fullback.png'))
+      clipboard.writeImage(nativeImage.createFromPath('assets/scr/screenshot.png'))
       return
     }
 
@@ -35,8 +35,8 @@ angular.module('app', ['app.services', 'ngJcrop'])
     png.crop({ 
       x: $scope.obj.coords[0], 
       y: $scope.obj.coords[1],
-      height: $scope.obj.coords[4],
-      width: $scope.obj.coords[5]
+      height: $scope.obj.coords[5],
+      width: $scope.obj.coords[4]
     }, function (error, image) {
       if(error) throw error
       clipboard.writeImage(nativeImage.createFromBuffer(image.data))
@@ -47,7 +47,7 @@ angular.module('app', ['app.services', 'ngJcrop'])
   $scope.obj = {}
 
   // The url or the data64 for the image
-  $scope.obj.src = 'fullback.png'
+  $scope.obj.src = 'assets/scr/screenshot.png'
 
   // Must be [x, y, x2, y2, w, h]
   $scope.obj.coords = [window.screen.width-60, 80, window.screen.width-61, 80, 1, 1]

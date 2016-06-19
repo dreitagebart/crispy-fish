@@ -1,10 +1,16 @@
 const desktopCapturer = require('electron').desktopCapturer
 const remote = require('electron').remote
 const fs = require('fs')
+const path = require('path')
+const isDev = require('electron-is-dev')
+
+const cwdir = function() {
+  if(isDev) return path.join(process.cwd())   
+  return path.join(process.resourcesPath, 'app')
+}
 
 document.onreadystatechange = function () {
-  debugger
-  if (document.readyState == "complete") {
+  if (document.readyState === "complete") {
     desktopCapturer.getSources({
       types: ['screen'], 
       thumbnailSize: {
@@ -12,9 +18,8 @@ document.onreadystatechange = function () {
         height: window.screen.height
       }},
       (error, sources) => {
-        debugger
         if (error) throw error
-        fs.writeFileSync('fullback.png', sources[0].thumbnail.toPng())
+        fs.writeFileSync(cwdir() + '/assets/scr/screenshot.png', sources[0].thumbnail.toPng())
         var win = remote.getCurrentWindow()
         win.setBounds({
           x: 0,
@@ -28,7 +33,3 @@ document.onreadystatechange = function () {
     })
   }
 }
-
-
-
-

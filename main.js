@@ -108,7 +108,7 @@ function createSnipWindow() {
 		snipWindow = new BrowserWindow({
 			width: 10,
 			height: 10,
-			show: false,
+			// show: true,
 			useContentSize: true,
 			skipTaskbar: true,
 			fullscreen: false,
@@ -117,13 +117,10 @@ function createSnipWindow() {
 			alwaysOnTop: false,
 			enableLargerThanScreen: true
 		})
-		// snipWindow.maximize()
 		snipWindow.setMenu(null)
 		// snipWindow.webContents.openDevTools()
 		snipWindow.loadURL(`file://${__dirname}/capture.html`)
 		snipWindow.on('close', function(event) {
-			// cropWindow.hide()
-			// event.preventDefault()
 			snipWindow = null
 		})
 	} else {

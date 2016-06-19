@@ -5,7 +5,7 @@
 		<title>Settings</title>
 		<link rel="stylesheet" href="assets/lib/Materialize/dist/css/materialize.min.css">
 		<link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" ng-href="assets/css/{{settings.layout.theme}}.css">	
+    <link rel="stylesheet" ng-href="assets/css/theme/{{settings.layout.theme}}.css">	
 	</head>
 	<body>
     <div class="navbar-fixed">
@@ -172,7 +172,7 @@
               <p class="section">Choose theme</p>
               <div class="row">
                <a ng-click="switchTheme('atomic')" data-position="bottom" data-delay="50" data-tooltip="atomic" href="" class="tooltipped btn-flat theme atomic white-text"></a>
-               <a ng-click="switchTheme('incest')" data-position="bottom" data-delay="50" data-tooltip="incest" href="" class="tooltipped btn-flat theme incest white-text"></a>
+               <a ng-click="switchTheme('incent')" data-position="bottom" data-delay="50" data-tooltip="incent" href="" class="tooltipped btn-flat theme incent white-text"></a>
                <a ng-click="switchTheme('embrace')" data-position="bottom" data-delay="50" data-tooltip="embrace" href="" class="tooltipped btn-flat theme embrace white-text"></a>
                <a ng-click="switchTheme('fever')" data-position="bottom" data-delay="50" data-tooltip="fever" href="" class="tooltipped btn-flat theme fever white-text"></a>
                <a ng-click="switchTheme('crispy')" data-position="bottom" data-delay="50" data-tooltip="crispy" href="" class="tooltipped btn-flat theme crispy white-text"></a>
@@ -181,14 +181,11 @@
               <div class="row section">
                 <div class="col s2">Total size</div>
                 <div class="col s10"> 
+                  <span class="flow-text">{{settings.layout.size}} </span>  
                   <a class="btn-floating light-blue darken-3" ng-click="setZoom(-10)" ng-class="zoom <= 60 ? 'disabled' : ''"><i class="material-icons">zoom_out</i></a>
                   <a class="btn-floating light-blue darken-3" ng-click="setZoom(10)" ng-class="zoom >= 160 ? 'disabled' : ''"><i class="material-icons">zoom_in</i></a>    
-                  <span class="flow-text"> {{settings.layout.size}}</span>           
                 </div>
               </div>
-              <div class="row section">
-                <div class="col s5">lskjdlskj</div>
-              </div>              
             </div>
           </div>
         </div>

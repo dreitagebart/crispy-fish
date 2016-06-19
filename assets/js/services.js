@@ -80,7 +80,6 @@ angular.module('app.services', [])
 
   // constructor
   SettingsProvider = function() {
-    debugger
     this.settings = getSettings()
     registerShortcut(this.settings.general.shcut[0], this.settings.general.shcut[1])
     setAutoLaunch(this.settings.general.autolaunch)
