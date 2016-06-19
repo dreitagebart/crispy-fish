@@ -1,1 +1,1 @@
-#In this folder the screenshot for snip feature is stored
+In this folder the screenshot for snip feature is stored
