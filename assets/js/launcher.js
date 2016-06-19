@@ -2,15 +2,6 @@ const win = require('electron').remote
 const math = require('mathjs')
 const notifier = require('node-notifier')
 
-// function handleVisibilityChange() {
-//   if (!document.hidden) {
-//     $("#typeahead").select().focus()
-//   }
-// }
-
-// document.addEventListener("visibilitychange", handleVisibilityChange, false);
-
-
 angular.module('app', ['app.services', 'ngAnimate'])
 
 .controller('LauncherCtrl', function($scope, SettingsProvider, $document) {
@@ -44,7 +35,7 @@ angular.module('app', ['app.services', 'ngAnimate'])
       var stop
       
       var getPadded = function(num){
-        return num < 10 ? ('0' + num) : num;
+        return num < 10 ? ('0' + num) : num
       }
 
       scope.cwdir = SettingsProvider.getPath()
@@ -141,7 +132,7 @@ angular.module('app', ['app.services', 'ngAnimate'])
         scope.task.current = 0
         scope.left()
         if (angular.isDefined(stop)) {
-          $interval.cancel(stop);
+          $interval.cancel(stop)
           stop = undefined
           scope.task.started = false
         }
@@ -150,7 +141,7 @@ angular.module('app', ['app.services', 'ngAnimate'])
       scope.stopTask = function() {
         if(scope.task.minutes === 0) return
         if(angular.isDefined(stop)) {
-          $interval.cancel(stop);
+          $interval.cancel(stop)
           stop = undefined
           scope.task.started = false
         }

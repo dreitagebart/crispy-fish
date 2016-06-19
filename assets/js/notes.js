@@ -80,7 +80,6 @@ angular.module('app', ['app.services', 'ngAnimate'])
   }
 
   $scope.addNote = function() {
-    debugger
     var note = NotesProvider.setNote($scope.note)
 
     $scope.notes.push(note)

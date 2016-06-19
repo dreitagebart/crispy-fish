@@ -108,7 +108,7 @@ function createSnipWindow() {
 		snipWindow = new BrowserWindow({
 			width: 10,
 			height: 10,
-			// show: true,
+			show: true,
 			useContentSize: true,
 			skipTaskbar: true,
 			fullscreen: false,
@@ -118,7 +118,7 @@ function createSnipWindow() {
 			enableLargerThanScreen: true
 		})
 		snipWindow.setMenu(null)
-		// snipWindow.webContents.openDevTools()
+		snipWindow.webContents.openDevTools()
 		snipWindow.loadURL(`file://${__dirname}/capture.html`)
 		snipWindow.on('close', function(event) {
 			snipWindow = null

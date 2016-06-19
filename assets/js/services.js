@@ -16,7 +16,6 @@ angular.module('app.services', [])
 
   // constructor
   NotesProvider = function() {
-    debugger
     this.notes = getNotes()
     noteId = this.notes.length
     return this.notes
@@ -123,7 +122,6 @@ angular.module('app.services', [])
   }
 
   // private
-
   function bootstrap() {
     return {
       general: {
