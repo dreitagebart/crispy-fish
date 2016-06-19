@@ -1,7 +1,7 @@
 node_modules
 assets/lib
 dist
-assets/scr/*.png
+assets/scr/**
 
 # Windows image file caches
 Thumbs.db
