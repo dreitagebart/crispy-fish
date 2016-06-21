@@ -10,7 +10,7 @@ const path = require('path')
 const globalShortcut = electron.globalShortcut
 
 // adds debug features like hotkeys for triggering dev tools and reload
-require('electron-debug')()
+// require('electron-debug')()
 
 // prevent window being garbage collected
 let launcherWindow
@@ -190,6 +190,7 @@ function toggleLauncherWindow() {
 	if(launcherWindow.isVisible()) {
 		launcherWindow.hide()
 	} else {
+		ipc.send()
 		launcherWindow.show()
 	}
 } 
@@ -216,9 +217,11 @@ function createAboutWindow() {
 	if(!aboutWindow) {
 		aboutWindow = new BrowserWindow({
 			width: 600,
-			height: 400,
-			frame: false,
-			alwaysOnTop: true,
+			height: 450,
+			frame: true,
+			resizable: false,
+			minimizable: false,
+			alwaysOnTop: false,
 			icon: path.join(__dirname, "assets/img/crispyfish.png")
 		})
 		aboutWindow.setMenu(null)

@@ -23,7 +23,7 @@
       <i ng-hide="model" class="material-icons">search</i>
       <i ng-show="model" class="material-icons">close</i>
     </a>
-    <input id="typeahead" type="text" ng-model="model" placeholder="{{prompt}}" ng-keydown="shoveOn($event)">
+    <input id="typeahead" type="text" ng-model="model" placeholder="{{prompt}}" ng-keydown="shoveOn($event)" ng-model-options="{debounce: 500}">
   </div>
   </div>
   <div class="row" ng-hide="!model.length || selected">

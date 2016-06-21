@@ -7,9 +7,9 @@
 		<link rel="stylesheet" href="assets/css/style.css">	
     <link rel="stylesheet" ng-href="assets/css/theme/{{settings.layout.theme}}.css">		
 	</head>
-	<body>
+	<body ng-init="getEmptyNote()">
 
-    <div class="fixed-action-btn horizontal" style="top: 110px; right: 40px;">
+    <div class="fixed-action-btn horizontal click-to-toggle">
       <a class="btn-floating btn-large light-blue darken-3">
         <i class="material-icons">menu</i>
       </a>
@@ -72,8 +72,12 @@
                 </div>
                 <div class="row">
                   <div class="col s6">
-                    <input type="text" ng-model="note.title" id="note-title" placeholder="Write a note" ng-focus="isEditMode = true" />
+                    <input type="text" ng-model="note.title" id="note-title" placeholder="Write a note" ng-focus="isEditMode = true" ng-change="scrapeUrl()" ng-model-options='{ debounce: 4000 }' />
                   </div>
+                </div>
+                <div ng-show="note.type == 'url'" class="card-panel grey lighten-5 z-depth-1">
+                  <strong>{{note.pagetitle}}</strong><br />
+                  {{note.url}}
                 </div>
                 <div class="row" ng-show="isEditMode">                          
                   <div class="input-field col s8">
@@ -93,14 +97,27 @@
         <div class="col s4" ng-repeat="note in notes | orderBy:'-created' | filter : search track by $index">
           <div class="card hoverable" ng-class="note.color != '' ? note.color + ' lighten-2' : ''" ng-mouseover="note.edit = true" ng-mouseleave="note.edit = false">
             <a ng-show="note.edit" class="close" href="" ng-click="deleteNote(note.id)"><i class="material-icons">close</i></a>
-            <div class="card-content">
+            <div class="card-content" ng-click="showNote(note)">
               <div class="row">
-                <div class="col s11" ng-dblclick="setEdit()">
+                <div class="col s11" ng-show="note.type != 'url'">
                   <span class="flow-text">{{note.title}}</span>
                 </div>
               </div>
-              <p class="section" ng-show="note.text">{{note.text}}</p>
-              <div class="right-align"><i>{{note.created | moment }}</i></div>
+              <div style="cursor:pointer;" ng-show="note.type == 'url'" class="card-panel grey lighten-5 z-depth-1">
+                <strong>{{note.title}}</strong><br />
+                <span style="word-wrap:break-word;">{{note.url | hostname}}</span>
+              </div>
+              <p class="section" style="white-space:pre-line;">{{note.text | characters: 500}}</p>
+              <div class="row">
+                <div class="col s5">
+                  <div class="chip">#{{$index + 1}}</div>
+                </div>
+                <div class="col s7 right-align">
+                  <div class="chip white">
+                    <i>{{note.created | moment }}</i>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -134,10 +151,18 @@
       </div>
     </div>
 		
+    <div id="notemodal" class="modal">
+      <div class="modal-content">
+        <h4>{{modal.title}}</h4>
+        <p ng-show="modal.text" style="white-space:pre-line;">{{modal.text}}</p>
+      </div>
+    </div>
+
 		<script>window.$ = window.jQuery = require('./assets/lib/jquery/dist/jquery.min.js')</script>
 		<script src="assets/lib/hammerjs/hammer.min.js"></script>
 		<script src="assets/lib/Materialize/dist/js/materialize.min.js"></script>
 		<script src="assets/lib/angular/angular.min.js"></script>
+    <script src="assets/lib/angular-truncate/src/truncate.js"></script>
     <script src="assets/lib/angular-animate/angular-animate.min.js"></script>
     <script src="assets/lib/moment/min/moment.min.js"></script>
 		<script src="assets/js/services.js"></script>

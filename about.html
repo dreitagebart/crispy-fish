@@ -1,17 +1,34 @@
 <!doctype html>
-<html>
+<html ng-app="app" ng-controller="AboutCtrl">
 	<head>
 		<meta charset="utf-8">
 		<title>About</title>
 		<link rel="stylesheet" href="assets/lib/Materialize/dist/css/materialize.min.css">
 		<link rel="stylesheet" href="assets/css/style.css">		
+		<link rel="stylesheet" ng-href="assets/css/theme/{{settings.layout.theme}}.css">	
 	</head>
 	<body>
     <div class="container">
-      <div class="row right-align"><a href="javascript:window.close()"><i class="material-icons">close</i></a></div>
-      <div class="card">
-        <div class="card-content flow-text">This version is absofuckinglutely beta. Pull requests wanted...</div>
-      </div>
+			<div class="card-panel grey lighten-5 z-depth-1" style="margin-top:45px;">
+				<div class="row valign-wrapper">
+        	<div class="col s3">
+            <img src="assets/img/crispyfish.png" alt="" class="circle responsive-img">
+          </div>
+          <div class="col s9 flow-text">
+            <p>This project is <strong>absofuckinglutely</strong> beta! Made with love, sweat and lots of coffee...</p>
+						<p>If you want to help improving it, kindly pull requests on <strong>Github</strong>.</p>
+						<p><a href="" class="btn waves-effect waves-light light-blue darken-3" ng-click="openGithub()">View on Github</a></p>
+						<p><a href="" class="btn waves-effect waves-light light-blue darken-3" ng-click="openTwitter()">View Twitter</a></p>
+          </div>
+        </div>
+	    </div>
     </div>
+
+		<script>window.$ = window.jQuery = require('./assets/lib/jquery/dist/jquery.min.js')</script>
+		<script src="assets/lib/hammerjs/hammer.min.js"></script>
+		<script src="assets/lib/Materialize/dist/js/materialize.min.js"></script>
+		<script src="assets/lib/angular/angular.min.js"></script>
+	  <script src="assets/js/services.js"></script>
+    <script src="assets/js/about.js"></script>
 	</body>
 </html>

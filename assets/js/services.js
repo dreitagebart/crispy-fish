@@ -9,15 +9,16 @@ const fs = require('fs')
 
 angular.module('app.services', [])
 
-.factory('NotesProvider', function($q) {
+.factory('NotesProvider', function() {
   
   var NotesProvider
   var key
+  const Xray = require('x-ray');
   const Dexie = require('dexie')
   var db = new Dexie('crispydb')
-
+  
   db.version(1).stores({
-    notes: '++id, created, title, text, color, done'
+    notes: '++id, created, title, text, color, type, url, done'
   })
 
   db.open().catch(function(error) {
@@ -34,11 +35,17 @@ angular.module('app.services', [])
   NotesProvider.addNote = function(note) {
     var object = getNoteObject()
     for(key in note) {
-      if(note.hasOwnProperty(key)) object[key] = note[key]
+      if(object.hasOwnProperty(key)) object[key] = note[key]
     } 
     db.notes.put(object)
     return object
-  } 
+  }
+
+  NotesProvider.scrapeUrl = function(url) {
+    var result 
+    var xray = new Xray()
+    return xray(url, 'title')
+  }
 
   NotesProvider.deleteNote = function(id) {
     db.notes.where('id').equals(id).delete()
@@ -51,6 +58,7 @@ angular.module('app.services', [])
       text: "",
       type: "text",
       color: "",
+      url: "",
       created: Date.now()
     }
   }

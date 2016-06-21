@@ -29,7 +29,9 @@
     "marked": "^0.3.5",
     "mathjs": "^3.2.1",
     "node-notifier": "^4.6.0",
-    "walk": "^2.3.9"
+    "random-greetings": "^1.0.5",
+    "walk": "^2.3.9",
+    "x-ray": "^2.3.0"
   },
   "devDependencies": {
     "devtron": "^1.1.2",

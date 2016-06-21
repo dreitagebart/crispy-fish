@@ -1,22 +1,23 @@
 const win = require('electron').remote 
 const math = require('mathjs')
 const notifier = require('node-notifier')
+const rg = require('random-greetings')
 
 angular.module('app', ['app.services', 'ngAnimate'])
 
 .controller('LauncherCtrl', function($scope, SettingsProvider, $document) {
-
+  
   $scope.settings = new SettingsProvider()
 
   $document.ready(function() {
+    Materialize.toast(rg.greet(), 6000)
     SettingsProvider.setZoom($scope.settings.layout.size)
     document.addEventListener("visibilitychange", function() {
-     if (!document.hidden) {
+      if(!document.hidden) {
         angular.element("#typeahead").select().focus()
       }
     }, false)
   })
-
 })
 
 .directive('typeahead', function($timeout, SettingsProvider, $interval) {

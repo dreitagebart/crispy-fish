@@ -1,9 +1,16 @@
-angular.module('app', ['app.services', 'ngAnimate'])
+angular.module('app', ['app.services', 'ngAnimate', 'truncate'])
 
 .filter('moment', function() {
-    return function(date) {
-      return moment(date).fromNow()
-    }
+  return function(date) {
+    return moment(date).fromNow()
+  }
+})
+
+.filter('hostname', function() {
+  return function(url) {
+    if(!url) return
+    return (new URL(url)).hostname
+  }
 })
 
 .controller('NotesCtrl', function($scope, SettingsProvider, NotesProvider, $document, $timeout) {
@@ -21,19 +28,35 @@ angular.module('app', ['app.services', 'ngAnimate'])
     })
   })
 
-  $scope.search = ""
+  $scope.getEmptyNote = function() {
+    $scope.note = {
+      title: "",
+      text: "",
+      type: "text",
+      color: "",
+      isUrl: false,
+      pagetitle: "",
+      url: ""
+    }
+  }
 
-  $scope.note = {}
+  $scope.scrapeUrl = function() {
+    var url = $scope.note.title
+    if(!url.startsWith('http://') && !url.startsWith('https://')) return $scope.isUrl = false
+    $scope.note.url = url
+    $scope.note.type = 'url'
+    var title = NotesProvider.scrapeUrl(url)
+    title(function(error, result) {
+      $timeout(function() {
+        $scope.note.pagetitle = result
+      }, 0)
+    })
+    // $scope.note.hostname = (new URL(url)).hostname
+  }
 
   $scope.resetSearch = function() {
     angular.element('#search').focus()
     $scope.search = ""
-  }
-
-  $scope.isActive = false
-  
-  $scope.setActive = function(value) {
-    $scope.isActive = value
   }
   
   $scope.layout = "block"
@@ -43,25 +66,6 @@ angular.module('app', ['app.services', 'ngAnimate'])
     return $scope.layout = "block"
   }
   
-  $scope.setEditMode = function() {
-    if(!$scope.note.title) {
-      $scope.isEditMode = false
-      $scope.note = {}
-    }
-  }
-
-  $scope.setEdit = function() {
-    angular.forEach($scope.settings.notes, function(note) {
-      if(note.edit === true) {
-        $scope.note.title = note.title
-        $scope.note.text = note.content
-        $scope.isEditMode = true
-        angular.element('#note-title').focus()
-        return
-      }      
-    })
-  }
-
   $scope.settings = new SettingsProvider()
 
   new NotesProvider().then(function(notes) {
@@ -70,6 +74,14 @@ angular.module('app', ['app.services', 'ngAnimate'])
     }, 0)
   })
   
+  $scope.showNote = function(note) {
+    if(note.type == 'url') return shell.openExternal(note.url)
+
+    angular.element('#notemodal').openModal()
+    $scope.modal = note
+    console.log(note)
+  }
+
   $scope.resetNote = function() {
     $scope.note = {}
     $scope.isEditMode = false
@@ -78,15 +90,20 @@ angular.module('app', ['app.services', 'ngAnimate'])
   $scope.newNote = function() {
     angular.element('#note-title').focus()
     $scope.isEditMode = true
-    $scope.note = {}
+    $scope.getEmptyNote()
   }
 
   $scope.setColorNote = function(value) {
-    debugger
     $scope.note.color = value
   }
 
   $scope.addNote = function() {
+    if(!$scope.note.title && !$scope.note.text) {
+      var $toastContent = $('<span>Please set a title or text for your note...</span>')
+      return Materialize.toast($toastContent, 6000)
+    }
+
+    if($scope.note.type === "url") $scope.note.title = $scope.note.pagetitle
     var note = NotesProvider.addNote($scope.note)
     $scope.notes.push(note)
     $scope.resetNote()
@@ -105,7 +122,7 @@ angular.module('app', ['app.services', 'ngAnimate'])
       index++
     })
 
-    var $toastContent = $('<span>Note deleted...</span>')
+    var $toastContent = $('<span>Note deleted... <a href="" ng-click="undoNote()">UNDO</a></span>')
     Materialize.toast($toastContent, 6000)
   }
 })
