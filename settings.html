@@ -28,9 +28,10 @@
         </div>
       </nav>
     </div>
+
     <div class="container section">
       <div class="row">
-        <div class="col s12 m8">
+        <div class="col m12 l8">
           <div class="card">
             <div class="card-content">
               <h5 id="general">General</h5>
@@ -87,38 +88,50 @@
         </div>
       </div>
       <div class="row">
-        <div class="col s12 m8">
+        <div class="col m12 l8">
           <div class="card">
             <div class="card-content">
               <h5 id="catalogue">Catalogue</h5>
               <div class="divider"></div>
               <p class="section flow-text">The catalogue is your whole index where all files are listed. You have currently <strong><span ng-show="settings.catalogue.length == 0">no</span><span ng-show="settings.catalogue.length != 0">{{settings.catalogue.length}}</span> files</strong> in your catalogue.</p>
-              <ul class="collection">
-                <li class="collection-item avatar" ng-repeat="folder in settings.folders track by $index">
-                  <i class="material-icons circle">folder</i>
-                  <span class="title">{{folder.path}}</span>
-                  <br />
-                  <input type="checkbox" class="filled-in" id="folder{{$index+1}}" checked="checked" ng-model="folder.dir" />
-                  <label for="folder{{$index+1}}">list folder</label>
-                  <br />
-                  <a href="#modal1" ng-click="editExt($index)">extensions</a>
-                  <span ng-repeat="extension in folder.ext"><div class="chip">{{extension}}</div> </span>
-                  <a href="" class="secondary-content" ng-click="deleteFolder($index)"><i class="material-icons">delete</i></a>
-                </li>
-              </ul>
+              <p class="section"><a href="" ng-click="showCatalogue()" class="btn waves-effect waves-light light-green">Show Catalogue</a></p>
+              <div class="card-panel grey lighten-5 z-depth-1" ng-repeat="folder in settings.folders track by $index">
+                <div class="row valign-wrapper">
+                  <div class="col s2">
+                    <i class="material-icons medium circle">folder</i>
+                  </div>
+                  <div class="col s9">
+                    <strong style="word-break: keep-all;">{{folder.path}}</strong>
+                    <br />
+                    <input type="checkbox" class="filled-in" id="folder{{$index+1}}" checked="checked" ng-model="folder.dir" />
+                    <label for="folder{{$index+1}}">include folders</label>
+                    <br />
+                    <a ng-click="editExt($index)" ng-hide="folder.ext.length" href="">all file extensions</a>                    
+                    <span ng-show="folder.ext.length">
+                      <a href="" ng-click="editExt($index)">file extensions</a>
+                      <span ng-repeat="ext in folder.ext"><div class="chip">.{{ext}}</div> </span>
+                    </span>
+                  </div>
+                  <div class="col s1">
+                    <a href="" ng-click="deleteFolder($index)"><i class="material-icons">delete</i></a>  
+                  </div>
+                </div>
+              </div>
+              <div class="card-action">
+                <a class="waves-effect waves-light btn light-green" ng-click="addFolder()"><i class="material-icons left">create_new_folder</i>Add Folder</a>          
+                <a class="waves-effect waves-light btn light-green" ng-click="refreshCat(true)"><i class="material-icons left">cached</i>Refresh catalogue</a>
+              </div>
             </div>
-            <div class="card-action">
-              <a class="waves-effect waves-light btn light-green" ng-click="addFolder()"><i class="material-icons left">create_new_folder</i>Add Folder</a>          
-              <a class="waves-effect waves-light btn light-green" ng-click="refreshCat()"><i class="material-icons left">cached</i>Refresh catalogue</a>
-            </div>            
           </div>
         </div>
-      </div>      
+      </div>  
+
       <div class="row">
-        <div class="col s12 m8">
+        <div class="col m12 l8">
           <div class="card" id="catalogue">
             <div class="card-content">
               <h5 id="task">Tasks</h5>
+              <div class="divider"></div>
               <p class="section flow-text">You can access task manager by typing <strong>task</strong> into command line.</p>
               <div class="row">
                 <div class="col s8">
@@ -151,7 +164,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="col s12 m8">
+        <div class="col m12 l8">
           <div class="card">
             <div class="card-content">
               <h5 id="layout">Layout</h5>
@@ -198,9 +211,9 @@
     
     <div id="extmodal" class="modal">
       <div class="modal-content">
-        <h4>Edit extensions</h4>
+        <h5>Edit extensions</h5>
         <input type="text" placeholder="Type in your extension name, e. g. exe, lnk, pdf" ng-keypress="($event.which === 13)?addExt(fileext):0" ng-model="fileext" autofocus>
-        <span ng-repeat="ext in exts"><div class="chip">{{ext}}<i class="material-icons" ng-click="deleteExt($index)">close</i></div> </span>
+        <span ng-repeat="ext in exts"><div class="chip">.{{ext}}<i class="material-icons" ng-click="deleteExt($index)">close</i></div> </span>
       </div>
       <div class="modal-footer">
         <a href="" class="waves-effect waves-light btn light-green" ng-click="saveExt()">Save</a>
@@ -209,12 +222,35 @@
     
     <div id="askforsave" class="modal">
       <div class="modal-content">
-        <h4>Hey,</h4>
-        <p>do you want to save your changes made by you?</p>
+        <h5>Hey,</h5>
+        <p>...don't you want to save your settings?</p>
       </div>
       <div class="modal-footer">
         <a href="" class="waves-effect waves-light btn light-green" ng-click="saveSettings()">Yes</a>
         <a href="" class="waves-effect waves-light btn light-green darken-3" ng-click="cancelSettings(true)">No</a>
+      </div>
+    </div>
+
+    <div id="catmodal" class="modal modal-fixed-footer">
+      <div class="modal-content">
+        <h5>Catalogue</h5>
+        <input type="text" placeholder="search file" ng-model="filefilter" />
+        <ul class="collection">
+          <li class="collection-item" ng-repeat="cat in settings.catalogue | filter:filefilter">
+            <div class="row valign-wrapper">
+              <div class="col s1">
+                <i ng-show="cat.ext != 'dir'" class="material-icons">insert_drive_file</i>
+                <i ng-show="cat.ext == 'dir'" class="material-icons">folder</i>
+              </div>
+              <div class="col s10">
+                {{cat.path}}\{{cat.file}}
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <a href="" class="waves-effect waves-light btn light-green modal-close">Okay</a>
       </div>
     </div>
     
@@ -226,8 +262,3 @@
     <script src="assets/js/settings.js"></script>
 	</body>
 </html>
-
-
-
-
-

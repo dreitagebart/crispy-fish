@@ -16,15 +16,15 @@
   </blockquote>
 </div>
 
-<div class="container">
+<div class="container no-drag">
   <div class="row">
-  <div class="input-field">
-    <a href="" ng-click="reset()" class="prefix">
-      <i ng-hide="model" class="material-icons">search</i>
-      <i ng-show="model" class="material-icons">close</i>
-    </a>
-    <input id="typeahead" type="text" ng-model="model" placeholder="{{prompt}}" ng-keydown="shoveOn($event)" ng-model-options="{debounce: 500}">
-  </div>
+    <div class="input-field">
+      <a href="" ng-click="reset()" class="prefix">
+        <i ng-hide="model" class="material-icons">search</i>
+        <i ng-show="model" class="material-icons">close</i>
+      </a>
+      <input id="typeahead" type="text" ng-model="model" placeholder="{{prompt}}" ng-keydown="shoveOn($event)" ng-model-options="{debounce: 200}">
+    </div>
   </div>
   <div class="row" ng-hide="!model.length || selected">
     <div class="card-panel grey lighten-5 z-depth-1" ng-show="isNote">
@@ -88,33 +88,9 @@
       </div>
     </div>
   </div>
-
-  <!--<ul class="collection" ng-hide="!model.length || selected">
-    <li class="collection-item avatar" ng-show="isNote">
-      <i class="material-icons circle">note</i>
-      <span class="flow-text">Hit enter to access <strong>note manager</strong></span>
-    </li>
-    <li class="collection-item avatar" ng-show="isMath">
-      <i class="material-icons circle">plus_one</i>
-      <span class="flow-text">The result of <strong>{{calc}}</strong> is <strong>{{mathResult}}</strong></span>
-    </li>
-    <li class="collection-item avatar" ng-show="isTask">
-      <i class="material-icons circle">timer</i>
-      <span class="flow-text">Hit enter to access <strong>task manager</strong></span>
-    </li>      
-    <li class="collection-item avatar" ng-hide="filtered.length || isTask || isMath || isNote">
-      <i class="material-icons circle">search</i>
-      <span class="flow-text">No entries found... hit enter to google for <strong>{{model}}</strong></span>
-    </li>
-    <li class="collection-item avatar" ng-repeat="item in items | filter:model as filtered track by $index" ng-click="handleSelection(item[ttitle])" style="cursor:pointer" ng-class="{'light-blue lighten-3':isCurrent($index)}" ng-mouseenter="setCurrent($index)">
-      <i class="material-icons circle">folder</i>
-      <span class="flow-text">{{item[ttitle]}}</span>
-      <p>{{item[tsubtitle]}}</p>
-    </li>
-  </ul>-->
 </div>
 
-<div id="taskmanager" class="modal">
+<div id="taskmanager" class="modal no-drag">
   <div class="modal-content">
     <h4>Task Manager</h4>
     <div class="input-field col s6">

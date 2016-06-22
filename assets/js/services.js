@@ -141,7 +141,7 @@ angular.module('app.services', [])
   function emptyFolder() {
     return {
       path: "",
-      ext: ["all"],
+      ext: [],
       dir: false
     }
   }

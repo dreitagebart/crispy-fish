@@ -7,6 +7,8 @@ angular.module('app', ['app.services'])
   
   const cwdir = SettingsProvider.getPath()
 
+  var foldersChanged = false
+
   $scope.switchTheme = function(theme) {
     if(!$scope.settings.layout) $scope.settings.layout = {}
     $scope.settings.layout.theme = theme
@@ -31,6 +33,12 @@ angular.module('app', ['app.services'])
   $scope.settings = new SettingsProvider()
 
   $document.ready(function() {
+
+    $scope.$watch('settings.folders', function() {
+      debugger
+      foldersChanged = true
+    })
+
     SettingsProvider.setZoom($scope.settings.layout.size)
     angular.element('.button-collapse').sideNav()
     angular.element('select').material_select()    
@@ -41,6 +49,8 @@ angular.module('app', ['app.services'])
   })
 
   $scope.saveSettings = function() {
+    debugger
+    if(foldersChanged) $scope.refreshCat(false)
     let settings = $scope.settings
     SettingsProvider.commit(settings)
     ipc.send('settings-saved', settings) 
@@ -117,7 +127,11 @@ angular.module('app', ['app.services'])
     $scope.exts.splice(index, 1)
   }
   
-  $scope.refreshCat = function() {
+  $scope.showCatalogue = function() {
+    angular.element('#catmodal').openModal()
+  }
+
+  $scope.refreshCat = function(showmodal) {
     
     $scope.settings.catalogue = []
     // To be truly synchronous in the emitter and maintain a compatible api,
@@ -130,23 +144,27 @@ angular.module('app', ['app.services'])
           }, 
           directories: function (root, dirStatsArray, next) {
             if(folder.dir) {
-              angular.forEach(dirStatsArray, function(dir) {
-                var entry = {}
-                entry.path = root
-                entry.file = dir.name
-                entry.ext = "dir"
+              // angular.forEach(dirStatsArray, function(dir) {
+              //   var entry = {}
+              //   entry.path = root
+              //   entry.file = dir.name
+              //   entry.ext = "dir"
                 
-                $scope.settings.catalogue.push(entry)              
-              })
+              //   $scope.settings.catalogue.push(entry)              
+              // })
+              next()
             }
           }, 
           file: function (root, fileStats, next) {
             var ext = path.extname(fileStats.name)
+            ext = ext.slice(1).toLowerCase()
+            
+            if(folder.ext.indexOf(ext) < 0 && folder.ext.length) return next()           
             
             var entry = {}
             entry.path = root
             entry.file = fileStats.name
-            entry.ext = ext.slice(1).toLowerCase()
+            entry.ext = ext
             
             $scope.settings.catalogue.push(entry)        
             
@@ -160,5 +178,6 @@ angular.module('app', ['app.services'])
 
       walker = walk.walkSync(folder.path, options)  
     })
+    if(showmodal) $scope.showCatalogue()
   }
 })

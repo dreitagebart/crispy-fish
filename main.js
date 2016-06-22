@@ -118,7 +118,6 @@ function createSnipWindow() {
 			enableLargerThanScreen: true
 		})
 		snipWindow.setMenu(null)
-		snipWindow.webContents.openDevTools()
 		snipWindow.loadURL(`file://${__dirname}/capture.html`)
 		snipWindow.on('close', function(event) {
 			snipWindow = null
@@ -131,12 +130,14 @@ function createSnipWindow() {
 function createSettingsWindow() {
 	if(!settingsWindow) {
 		settingsWindow = new BrowserWindow({
-			width: 600,
-			height: 400,
+			minWidth: 800,
+			minHeight: 600,
+			width: 800,
+			height: 600,
 			icon: path.join(__dirname, "assets/img/crispyfish.png")
 		})
 		settingsWindow.maximize()
-		// settingsWindow.webContents.openDevTools()
+		settingsWindow.webContents.openDevTools()
 		settingsWindow.setMenu(null)
 		settingsWindow.loadURL(`file://${__dirname}/settings.html`)
 		settingsWindow.on('close', function(event) {
@@ -175,7 +176,8 @@ function createLauncherWindow() {
 			width: 600,
 			height: 400,
 			frame: false,
-			skipTaskbar: true 
+			skipTaskbar: true,
+			resizable: true 
 		})
 		launcherWindow.loadURL(`file://${__dirname}/launcher.html`)
 		launcherWindow.on('blur', function() {
@@ -190,7 +192,6 @@ function toggleLauncherWindow() {
 	if(launcherWindow.isVisible()) {
 		launcherWindow.hide()
 	} else {
-		ipc.send()
 		launcherWindow.show()
 	}
 } 
