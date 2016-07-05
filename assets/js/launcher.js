@@ -1,22 +1,81 @@
 const win = require('electron').remote 
 const math = require('mathjs')
 const notifier = require('node-notifier')
-const rg = require('random-greetings')
 
 angular.module('app', ['app.services', 'ngAnimate'])
 
-.controller('LauncherCtrl', function($scope, SettingsProvider, $document) {
+.filter('cfilter', function () {
+  return function (values, input) {
+    if(!input) return
+    var output = []
+    var regex = new RegExp(input, 'i')
+
+    for(var i = 0; i < values.length; i++) {
+      var res = values[i].file.search(regex)
+      if(res >= 0) {
+        output.push(values[i])
+      }
+    }
+    return output
+  }
+})
+
+.controller('LauncherCtrl', function($scope, SalutService, SettingsProvider, $document, $timeout) {
   
+  ipc.on('salute', (event, message) => {
+    Materialize.toast(SalutService.salute(), 6000)
+  })
+
+  ipc.on('silent-refresh', (event, message) => {
+    $timeout(function() {
+      $scope.settings = new SettingsProvider()
+    }, 0)
+  })
+
   $scope.settings = new SettingsProvider()
 
   $document.ready(function() {
-    Materialize.toast(rg.greet(), 6000)
-    SettingsProvider.setZoom($scope.settings.layout.size)
+
+    particlesJS.load('particles-js', 'assets/js/particle-bubble.json', function() {
+      console.log('particles loaded')
+    })
+
+    Materialize.toast(SalutService.salute(), 6000)
+
     document.addEventListener("visibilitychange", function() {
       if(!document.hidden) {
         angular.element("#typeahead").select().focus()
       }
     }, false)
+
+    const menu = new Menu()
+    menu.append(new MenuItem({label: 'Settings', click: function() {
+      ipc.send('show-settings')
+    }}))
+    menu.append(new MenuItem({label: 'Notes', click: function() {
+      ipc.send('note-manager')
+    }}))
+    menu.append(new MenuItem({label: 'Snip', click: function() {
+      ipc.send('snip-it')
+    }}))
+    menu.append(new MenuItem({type: 'separator'}))
+    menu.append(new MenuItem({label: 'About', click: function() {
+      ipc.send('show-about')
+    }}))
+    menu.append(new MenuItem({type: 'separator'}))
+    menu.append(new MenuItem({label: 'Help', click: function() {
+      ipc.send('show-help')
+    }}))
+    menu.append(new MenuItem({type: 'separator'}))
+    menu.append(new MenuItem({label: 'Exit', click: function() {
+      ipc.send('quit')
+    }}))
+
+    window.addEventListener('contextmenu', (event) => {
+      event.preventDefault()
+      menu.popup(remote.getCurrentWindow())
+    }, false)
+
   })
 })
 
@@ -34,12 +93,13 @@ angular.module('app', ['app.services', 'ngAnimate'])
     link: function(scope, elem, attrs) {
       
       var stop
-      
+      var cwdir = SettingsProvider.getPath()
+      var settings = new SettingsProvider()
+
       var getPadded = function(num){
         return num < 10 ? ('0' + num) : num
       }
-
-      scope.cwdir = SettingsProvider.getPath()
+      
       scope.seconds = getPadded(0)
       scope.minutes = getPadded(0)
       
@@ -57,6 +117,12 @@ angular.module('app', ['app.services', 'ngAnimate'])
           scope.isNote = true
         } else {
           scope.isNote = false
+        }
+
+        if(scope.model.startsWith('?')) {
+          scope.isDict = true
+        } else {
+          scope.isDict = false
         }
 
         if(scope.model.startsWith('=')) {
@@ -85,6 +151,7 @@ angular.module('app', ['app.services', 'ngAnimate'])
       }
       
       scope.handleExecute = function(exec, folder) {
+        debugger
         if(folder) {
           shell.showItemInFolder(exec)          
         } else {
@@ -167,22 +234,24 @@ angular.module('app', ['app.services', 'ngAnimate'])
           
           //for testing: 
           // debugger
-          // if(scope.task.current < 298) scope.task.current = 298
+          // if(scope.task.current < 298) scope.task.current = 299
+          
           if(scope.task.current == scope.task.max) { 
             scope.stopTask()
-            var notification = new Notification("Hi there!")
-            notifier.notify({
-              title: "Time is up!",
-              message: scope.task.duration + " minutes left for task " + scope.task.name,
-              wait: true 
-            })
-            notifier.on('click', function() {
-              win.getCurrentWindow().show()
-            })
-            if(angular.isUndefined(SettingsProvider.settings.task.notification)) return
-            var audio = new Audio(scope.cwdir + "/assets/wav/" + SettingsProvider.settings.task.notification)
-            audio.play()
-            return
+
+            if(settings.task.notify) {
+              notifier.notify({
+                title: "Time is up!",
+                message: scope.task.duration + " minutes left for task " + scope.task.name,
+                wait: true 
+              })
+              notifier.on('click', function() {
+                win.getCurrentWindow().show()
+              })
+            }
+
+            var audio = new Audio(path.join(cwdir,'/assets/wav', settings.task.sound))
+            return audio.play()
           }
           scope.task.current = scope.task.current + 1
           scope.left()
@@ -197,8 +266,15 @@ angular.module('app', ['app.services', 'ngAnimate'])
       scope.reset = function() {
         scope.model = null
         angular.element('#typeahead').focus()
-      }      
+      }
       
+      scope.handleSelection = function() {
+        var i = scope.current
+        var exec = path.join(scope.filtered[i].path, scope.filtered[i].file)
+        shell.openExternal(exec)
+        scope.reset()
+      }
+
       scope.current = 0
       scope.selected = true
       scope.isCurrent = function(index) {
@@ -219,6 +295,15 @@ angular.module('app', ['app.services', 'ngAnimate'])
           scope._task = scope.task
           angular.element('#taskmanager').openModal()  
           scope.reset()    
+          return
+        }
+
+        if(scope.isDict) {
+          var dict = scope.model.substring(1)
+          ipc.send('dict', dict.trim())
+          $timeout(function() {
+            scope.reset()
+          }, 0)
           return
         }
 

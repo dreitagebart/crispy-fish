@@ -1,5 +1,5 @@
 <!doctype html>
-<html ng-app="app" ng-controller="SettingsCtrl">
+<html ng-app="app" ng-controller="SettingsCtrl" ng-cloak>
 	<head>
 		<meta charset="utf-8">
 		<title>Settings</title>
@@ -141,7 +141,7 @@
                   </select>
                 </div>
                 <div class="col s4">
-                  <a href="" class="waves-effect waves-light btn light-green" ng-click="playSound(settings.task.notification)"><i class="material-icons">volume_up</i></a>                  
+                  <a href="" class="waves-effect waves-light btn light-green" ng-click="playSound(settings.task.sound)"><i class="material-icons">volume_up</i></a>                  
                 </div>
               </div>
               <div class="row">
@@ -191,14 +191,6 @@
                <a ng-click="switchTheme('crispy')" data-position="bottom" data-delay="50" data-tooltip="crispy" href="" class="tooltipped btn-flat theme crispy white-text"></a>
                <a ng-click="switchTheme('darken')" data-position="bottom" data-delay="50" data-tooltip="darken" href="" class="tooltipped btn-flat theme darken white-text"></a>
               </div>
-              <div class="row section">
-                <div class="col s2">Total size</div>
-                <div class="col s10"> 
-                  <span class="flow-text">{{settings.layout.size}} </span>  
-                  <a class="btn-floating light-blue darken-3" ng-click="setZoom(-10)" ng-class="zoom <= 60 ? 'disabled' : ''"><i class="material-icons">zoom_out</i></a>
-                  <a class="btn-floating light-blue darken-3" ng-click="setZoom(10)" ng-class="zoom >= 160 ? 'disabled' : ''"><i class="material-icons">zoom_in</i></a>    
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -223,7 +215,7 @@
     <div id="askforsave" class="modal">
       <div class="modal-content">
         <h5>Hey,</h5>
-        <p>...don't you want to save your settings?</p>
+        <p class="flow-text">...don't you want to save your settings?</p>
       </div>
       <div class="modal-footer">
         <a href="" class="waves-effect waves-light btn light-green" ng-click="saveSettings()">Yes</a>

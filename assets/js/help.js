@@ -6,9 +6,12 @@ angular.module('app', ['hc.marked'])
   })
 }])
 
-.controller('HelpCtrl', function() {
-  
+.controller('HelpCtrl', function($scope, $timeout) {
 
-
-  
+  ipc.on('silent-refresh', (event, message) => {
+    debugger
+    $timeout(function() {
+      $scope.settings = new SettingsProvider()
+    }, 0)
+  })
 })

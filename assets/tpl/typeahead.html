@@ -1,4 +1,4 @@
-<div class="container" ng-show="task.active">
+<div class="container no-drag" ng-show="task.active">
   <blockquote>
     <p class="flow-text">
       <a href="" ng-click="resetTask()"><i class="material-icons">stop</i></a>
@@ -51,6 +51,18 @@
         </div>
       </div>
     </div>
+    <div class="card-panel grey lighten-5 z-depth-1" ng-show="isDict">
+      <div class="row valign-wrapper">
+        <div class="col s2">
+          <i class="material-icons medium">translate</i>
+        </div>
+        <div class="col s10">
+          <span class="black-text flow-text">
+            Search translation of <strong>{{model.substring(1).trim()}}</strong>
+          </span>
+        </div>
+      </div>
+    </div>
     <div class="card-panel grey lighten-5 z-depth-1" ng-show="isTask">
       <div class="row valign-wrapper">
         <div class="col s2">
@@ -63,7 +75,7 @@
         </div>
       </div>
     </div>
-    <div class="card-panel grey lighten-5 z-depth-1" ng-hide="filtered.length || isTask || isMath || isNote">
+    <div class="card-panel grey lighten-5 z-depth-1" ng-hide="filtered.length || isTask || isMath || isNote || isDict">
       <div class="row valign-wrapper">
         <div class="col s2">
           <i class="material-icons medium">search</i>
@@ -75,7 +87,7 @@
         </div>
       </div>
     </div>
-    <div class="card-panel grey lighten-5 z-depth-1" ng-repeat="item in items | filter:model as filtered track by $index" ng-click="handleSelection(item[ttitle])" style="cursor:pointer" ng-class="{'light-blue lighten-3':isCurrent($index)}" ng-mouseenter="setCurrent($index)">
+    <div ng-hide="isTask || isDict || isMath || isNote" class="card-panel grey lighten-5 z-depth-1" ng-repeat="item in items | cfilter:model as filtered" ng-click="handleSelection()" style="cursor:pointer" ng-class="{'light-blue lighten-3':isCurrent($index)}" ng-mouseenter="setCurrent($index)">
       <div class="row">
         <div class="col s2">
           <i class="material-icons medium">folder</i>

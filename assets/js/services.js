@@ -1,4 +1,7 @@
 const electron = require('electron')
+const remote = electron.remote
+const Menu = remote.Menu
+const MenuItem = remote.MenuItem
 const shell = electron.shell
 const clipboard = electron.clipboard
 const ipc = electron.ipcRenderer
@@ -9,12 +12,50 @@ const fs = require('fs')
 
 angular.module('app.services', [])
 
+.factory('ClipboardProvider', function() {
+  
+  const storage = require('electron-json-storage')
+  
+  var ClipboardProvider
+
+  ClipboardProvider = function() {
+    return this.clips = [{
+      content: "First Clip",
+      created: Date.now()
+    }]
+  }
+
+  ClipboardProvider.getPath = function() {
+    if(isDev) return path.join(process.cwd())   
+    return path.join(process.resourcesPath, 'app')
+  }
+
+  ClipboardProvider.clip = function() {
+    
+    var clip = clipboard.readText()
+    if(!clip) clip = clipboard.readImage()
+    if(!clip) clip = clipboard.readHTML()
+
+    var key = Date.now()
+    var entry = {
+      content: clip,
+      created: Date.now()
+    }
+    storage.set(key.toString(), entry, function(error) {
+      if(error) throw error
+      return entry
+    })
+  }
+
+  return ClipboardProvider
+})
+
 .factory('NotesProvider', function() {
   
   var NotesProvider
   var key
-  const Xray = require('x-ray');
   const Dexie = require('dexie')
+  const Xray = require('x-ray');
   var db = new Dexie('crispydb')
   
   db.version(1).stores({
@@ -94,10 +135,6 @@ angular.module('app.services', [])
     if(!settings) return
     localStorage.setItem('cf-settings', JSON.stringify(settings))
   }
-  
-  SettingsProvider.setZoom = function(zoom) {
-    document.body.style.zoom = zoom
-  }
 
   SettingsProvider.getTask = function() {
     task = {}
@@ -126,7 +163,7 @@ angular.module('app.services', [])
       }, 
       task: {
         notify: true,
-        sound: "airhorn.wav"
+        sound: "vibrating.wav"
       },
       catalogue: [],
       folders: [],
@@ -175,4 +212,57 @@ angular.module('app.services', [])
   
   // return object
   return SettingsProvider  
+})
+
+.factory('SalutService', function() {
+
+  var SalutService = {}
+  var salutations
+  
+  salutations = [
+    'Hey',
+    'Hi',
+    'Hola',
+    'What\'s up?',
+    'How\'s it going?',
+    'How are you doing?',
+    'You look awesome today',
+    'What\'s going on?',
+    'What\'s new?',
+    'How\'s everything?',
+    'How are things?',
+    'How\'s life?',
+    'How\'s your day?',
+    'How\'s your day going?',
+    'Good to see you',
+    'Nice to see you',
+    'Long time no see',
+    'It\'s been a while',
+    'Pleased to meet you',
+    'How have you been?',
+    'How do you do?',
+    'Yo!',
+    'Alright mate?',
+    'You alright?',
+    'Are you OK?',
+    'Howdy!',
+    'Whazzup?',
+    'G’day mate!',
+    'Shalom',
+    'Howyadoin\'?',
+    'Hey Dude',
+    'Guten Tag',
+    'Speak!',
+    'Hello',
+    'Hello there',
+    'Alrighty then!'
+  ]
+  
+  SalutService.salute = function() {
+    var random = Math.floor(Math.random() * salutations.length)
+    return salutations[random]
+  }
+
+  return SalutService
+
 })

@@ -27,6 +27,7 @@
     "moment": "~2.13.0",
     "angular-animate": "~1.5.6",
     "ng-jcrop": "~2.1.2",
-    "angular-truncate": "*"
+    "angular-truncate": "*",
+    "particles.js": "~2.0.0"
   }
 }

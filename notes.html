@@ -1,5 +1,5 @@
 <!doctype html>
-<html ng-app="app" ng-controller="NotesCtrl">
+<html ng-app="app" ng-controller="NotesCtrl" ng-cloak>
 	<head>
 		<meta charset="utf-8">
 		<title>Notes</title>
@@ -14,13 +14,11 @@
         <i class="material-icons">menu</i>
       </a>
       <ul>
-        <li><a class="btn-floating light-blue darken-3 tooltipped" ng-click="newNote()" data-position="bottom" data-delay="50" data-tooltip="add note"><i class="material-icons">note_add</i></a></li>
+        <li><a class="btn-floating light-blue darken-3 tooltipped" ng-click="newNote()" data-position="top" data-delay="50" data-tooltip="add note"><i class="material-icons">note_add</i></a></li>
         <li>
-          <a ng-show="layout=='list'" class="btn-floating light-blue darken-1 tooltipped" ng-click="switchLayout()" data-position="bottom" data-delay="50" data-tooltip="switch to block layout"><i class="material-icons">view_module</i></a>
-          <a ng-show="layout=='block'" class="btn-floating light-blue darken-1 tooltipped" ng-click="switchLayout()" data-position="bottom" data-delay="50" data-tooltip="switch to list layout"><i class="material-icons">list</i></a>
+          <a ng-show="layout=='list'" class="btn-floating light-blue darken-1 tooltipped" ng-click="switchLayout()" data-position="top" data-delay="50" data-tooltip="switch to block layout"><i class="material-icons">view_module</i></a>
+          <a ng-show="layout=='block'" class="btn-floating light-blue darken-1 tooltipped" ng-click="switchLayout()" data-position="top" data-delay="50" data-tooltip="switch to list layout"><i class="material-icons">list</i></a>
         </li>
-        <li><a class="btn-floating light-blue lighten-1"><i class="material-icons">publish</i></a></li>
-        <li><a class="btn-floating light-blue lighten-3"><i class="material-icons">attach_file</i></a></li>
       </ul>
     </div>
 
@@ -142,7 +140,7 @@
                   <i ng-show="note.color" class="material-icons" ng-class="note.color + '-text'">label</i>
                 </div>
                 <div class="col s10 right-align">
-                  <em>{{note.created | moment }}</em>
+                  <em>{{note.created | moment}}</em>
                 </div>
               </div>
             </div>

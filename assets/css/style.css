@@ -99,3 +99,18 @@ h5:before {
   background: -webkit-linear-gradient(to left, #485563 , #29323c);
   background: linear-gradient(to left, #485563 , #29323c);
 }   
+
+/*.large-header {
+	position: relative;
+	width: 100%;
+	background: #333;
+	overflow: hidden;
+	background-size: cover;
+	background-position: center center;
+	z-index: 1;
+}
+
+.demo-2 .large-header {
+	background-image: url('../img/demo-2-bg.jpg');
+	background-position: center bottom;
+}*/

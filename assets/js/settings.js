@@ -7,8 +7,8 @@ angular.module('app', ['app.services'])
   
   const cwdir = SettingsProvider.getPath()
 
-  var foldersChanged = false
-
+  var changed, foldersChanged = false
+  
   $scope.switchTheme = function(theme) {
     if(!$scope.settings.layout) $scope.settings.layout = {}
     $scope.settings.layout.theme = theme
@@ -20,36 +20,22 @@ angular.module('app', ['app.services'])
     })
   }
 
-  $scope.zoom = 100
-
-  $scope.setZoom = function(zoom) {
-    $scope.zoom = $scope.zoom + zoom
-
-    zoom = `${$scope.zoom}%`
-    $scope.settings.layout.size = zoom
-    SettingsProvider.setZoom(zoom)
-  }
-
   $scope.settings = new SettingsProvider()
 
   $document.ready(function() {
-
-    $scope.$watch('settings.folders', function() {
-      debugger
-      foldersChanged = true
-    })
-
-    SettingsProvider.setZoom($scope.settings.layout.size)
     angular.element('.button-collapse').sideNav()
     angular.element('select').material_select()    
     
     $scope.$watch('settings', function() {
-      $scope.changed = true
+      changed = true
     })
   })
 
+  ipc.on('ask-for-save', (event, message) => { 
+    $scope.cancelSettings()
+  })
+
   $scope.saveSettings = function() {
-    debugger
     if(foldersChanged) $scope.refreshCat(false)
     let settings = $scope.settings
     SettingsProvider.commit(settings)
@@ -58,28 +44,29 @@ angular.module('app', ['app.services'])
   
   $scope.cancelSettings = function(force) {
     if(force) ipc.send('settings-cancelled')
-    if($scope.changed) {
-      angular.element('#askforsave').openModal()
-      return
+    if(changed) {
+      return angular.element('#askforsave').openModal()
     }
     ipc.send('settings-cancelled')
   }
-
-  $scope.sounds = fs.readdirSync(cwdir + "/assets/wav")
+  
+  $scope.sounds = fs.readdirSync(path.join(cwdir, '/assets/wav'))
   
   $scope.playSound = function(sound) {
+   
     if(!$scope.audio) {
       $scope.audio = new Audio()
     }
     $scope.audio.currentTime = 0
     $scope.audio.pause()
-    $scope.audio.src = cwdir + "/assets/wav/" + sound
+    $scope.audio.src = path.join(cwdir, '/assets/wav/', sound)
     $scope.audio.play()
   }
   
   $scope.currentExt = 0
   
   $scope.deleteFolder = function(index) {
+    foldersChanged = true
     $scope.settings.folders.splice(index, 1)
   }
   
@@ -97,6 +84,7 @@ angular.module('app', ['app.services'])
       })
       if(!dupl) {
         $timeout(function() {
+          foldersChanged = true
           $scope.settings.folders.push(SettingsProvider.setFolder({
             path: folder[0]
           }))

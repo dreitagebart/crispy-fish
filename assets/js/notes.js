@@ -14,9 +14,17 @@ angular.module('app', ['app.services', 'ngAnimate', 'truncate'])
 })
 
 .controller('NotesCtrl', function($scope, SettingsProvider, NotesProvider, $document, $timeout) {
-  
+
+  ipc.on('silent-refresh', (event, message) => {
+    debugger
+    $timeout(function() {
+      $scope.settings = new SettingsProvider()
+    }, 0)
+  })
+
+  $scope.settings = new SettingsProvider()
+
   $document.ready(function() {
-    SettingsProvider.setZoom($scope.settings.layout.size)
     angular.element('.dropdown-button').dropdown({
       inDuration: 300,
       outDuration: 225,
@@ -65,8 +73,6 @@ angular.module('app', ['app.services', 'ngAnimate', 'truncate'])
     if($scope.layout === "block") return $scope.layout = "list"
     return $scope.layout = "block"
   }
-  
-  $scope.settings = new SettingsProvider()
 
   new NotesProvider().then(function(notes) {
     $timeout(function() {

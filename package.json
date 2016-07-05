@@ -26,17 +26,18 @@
     "dexie": "^1.4.1",
     "electron-debug": "^1.0.0",
     "electron-is-dev": "^0.1.1",
+    "electron-positioner": "^3.0.0",
+    "electron-prebuilt": "^1.2.5",
     "marked": "^0.3.5",
     "mathjs": "^3.2.1",
     "node-notifier": "^4.6.0",
-    "random-greetings": "^1.0.5",
     "walk": "^2.3.9",
     "x-ray": "^2.3.0"
   },
   "devDependencies": {
     "devtron": "^1.1.2",
     "electron-packager": "^7.0.0",
-    "electron-prebuilt": "^1.0.1",
+    "electron-prebuilt": "^1.2.5",
     "gulp": "^3.9.1",
     "xo": "^0.15.0"
   },

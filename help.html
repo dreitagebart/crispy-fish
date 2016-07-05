@@ -1,5 +1,5 @@
 <!doctype html>
-<html ng-app="app">
+<html ng-app="app" ng-controller="HelpCtrl" ng-cloak>
 	<head>
 		<meta charset="utf-8">
 		<title>Help</title>
@@ -7,7 +7,7 @@
 		<link rel="stylesheet" href="assets/css/style.css">	
     <link rel="stylesheet" ng-href="assets/css/theme/{{settings.layout.theme}}.css">		
 	</head>
-	<body ng-controller="HelpCtrl">
+	<body>
 
     <nav class="light-blue darken-3">
       <div class="nav-wrapper container">
@@ -30,6 +30,7 @@
 		<script src="assets/lib/angular/angular.min.js"></script>
     <script src="assets/lib/marked/lib/marked.js"></script>
     <script src="assets/lib/angular-marked/dist/angular-marked.min.js"></script>
+    <script src="assets/js/services.js"></script>
     <script src="assets/js/help.js"></script>
 	</body>
 </html>
