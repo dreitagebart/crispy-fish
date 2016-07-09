@@ -1,5 +1,7 @@
 # crispy-fish
 
+Attention: This program is absofuckinglutely BETA! Not ready for production use
+
 ## Installation
 ```shell
 npm install
