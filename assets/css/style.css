@@ -50,6 +50,10 @@ h5:before {
   margin-bottom: 0;
 }
 
+.collapsible-body p {
+  background-color: #efefef;
+}
+
 .close {
   position: absolute;
   top: 10px;

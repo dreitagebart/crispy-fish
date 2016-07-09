@@ -13,10 +13,32 @@ angular.module('app', ['app.services', 'ngAnimate', 'truncate'])
   }
 })
 
-.controller('NotesCtrl', function($scope, SettingsProvider, NotesProvider, $document, $timeout) {
+.filter('reminder', function() {
+  return function(date) {
+    if(!date) return
+    return moment(date).calendar(null, {
+      sameDay: '[today, at] h:mm A',
+      nextDay: '[tomorrow, at] h:mm A',
+      nextWeek: '[next week] dddd[, at] h:mm A',
+      sameElse: 'dddd[,] MM.DD.YYYY[, at] h:mm A'
+    })
+  }
+})
+
+.controller('NotesCtrl', function($scope, SettingsProvider, NotesProvider, $document, $timeout, $interval) {
+
+  var reminder
+
+  ipc.on('dismiss-reminder', (event, data) => {
+    var index = 0
+    angular.forEach($scope.notes, function(note) {
+      if(note.id == data) $scope.notes[index].reminded = 1
+      index++
+    })
+    NotesProvider.setReminded(data)
+  })
 
   ipc.on('silent-refresh', (event, message) => {
-    debugger
     $timeout(function() {
       $scope.settings = new SettingsProvider()
     }, 0)
@@ -25,6 +47,8 @@ angular.module('app', ['app.services', 'ngAnimate', 'truncate'])
   $scope.settings = new SettingsProvider()
 
   $document.ready(function() {
+    $scope.startReminder()
+
     angular.element('.dropdown-button').dropdown({
       inDuration: 300,
       outDuration: 225,
@@ -36,6 +60,65 @@ angular.module('app', ['app.services', 'ngAnimate', 'truncate'])
     })
   })
 
+  $scope.deleteReminder = function() {
+    $scope.note.reminder = null
+  }
+
+  $scope.stopReminder = function() {
+    if(angular.isDefined(reminder)) {
+      $interval.cancel(reminder)
+      reminder = null
+    }
+  }
+      
+  $scope.startReminder = function() {
+    if(angular.isDefined(reminder)) return
+    reminder = $interval(function() {
+      var remindme = false
+      var notes = []
+      var index = 0
+      var now = Date.now()
+      angular.forEach($scope.notes, function(note) {
+        if(note.reminder && note.reminded == 0) {
+          if(note.reminder < now) {
+            notes.push(note)
+
+            $scope.notes[index].remindme = 1
+            remindme = true
+          }
+          index++
+        }
+      })
+      if(remindme) {
+        ipc.send('show-reminder', notes)
+      }     
+    }, 60000) //each minute
+  }
+  
+  $scope.$on('$destroy', function() {
+    // Make sure that the interval is destroyed too
+    $scope.stopReminder()
+  })
+
+  $scope.addReminder = function(which) {
+    var today = moment()
+    var target
+    if(which == 'test') {
+      target = moment(today).add(10, 'seconds')
+    }
+    if(which == 'tomorrow') {
+      target = moment(today).add(1, 'days').hour(8).minute(0).second(0)
+    }
+    if(which == 'week') {
+      target = moment(today).add(1, 'weeks').hour(8).minute(0).second(0)
+    }
+    if(which == 'custom') {
+      
+    }
+    
+    $scope.note.reminder = target.valueOf()
+  }
+
   $scope.getEmptyNote = function() {
     $scope.note = {
       title: "",
@@ -44,7 +127,10 @@ angular.module('app', ['app.services', 'ngAnimate', 'truncate'])
       color: "",
       isUrl: false,
       pagetitle: "",
-      url: ""
+      url: "",
+      reminder: "",
+      remindme: 0,
+      reminded: 0
     }
   }
 
@@ -59,7 +145,6 @@ angular.module('app', ['app.services', 'ngAnimate', 'truncate'])
         $scope.note.pagetitle = result
       }, 0)
     })
-    // $scope.note.hostname = (new URL(url)).hostname
   }
 
   $scope.resetSearch = function() {

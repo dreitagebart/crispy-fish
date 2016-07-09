@@ -17,7 +17,7 @@ const Positioner = require('electron-positioner')
 let launcherWindow
 let notesWindow
 let settingsWindow
-let clipboardWindow
+let reminderWindow
 let dictWindow
 let helpWindow
 let aboutWindow
@@ -28,7 +28,6 @@ let appMenu
 function bootstrap() {
 	createAppIcon()
 	createLauncherWindow()
-	createClipboardWindow()
 }
 
 function registerShortcut(combination) {
@@ -96,8 +95,7 @@ function createAppIcon() {
 	{ 
 		label: 'Exit', 
 		click: function() {
-			appIcon.destroy()
-			app.exit(0) 
+			quitApp()
 		}
 	}])
 
@@ -129,28 +127,6 @@ function createDictWindow(dict) {
 	} else {
 		dictWindow.show()
 		dictWindow.loadURL(encodeURI(url))
-	}
-}
-
-function createClipboardWindow() {
-	if(!clipboardWindow) {
-		clipboardWindow = new BrowserWindow({
-			show: false,
-			width: 400,
-			height: 420,
-			skipTaskbar: true,
-			frame: false
-		})
-		
-		var positioner = new Positioner(clipboardWindow)
-		positioner.move('bottomRight')
-
-		clipboardWindow.loadURL(`file://${__dirname}/clipboard.html`)
-		clipboardWindow.on('blur', function() {
-			clipboardWindow.hide()
-		})
-	} else {
-		clipboardWindow.show()
 	}
 }
 
@@ -197,7 +173,6 @@ function createSettingsWindow() {
 			event.preventDefault()
 		})
 		settingsWindow.once('ready-to-show', function() {
-			console.log("fire")
 			settingsWindow.show()
 		})
 	} else {
@@ -217,12 +192,12 @@ function createNotesWindow() {
 		})
 		notesWindow.maximize()
 		notesWindow.setMenu(null)
+		notesWindow.webContents.openDevTools()
 		notesWindow.loadURL(`file://${__dirname}/notes.html`)
 		notesWindow.on('close', function(event) {
 			notesWindow = null
 		})
 		notesWindow.once('ready-to-show', function() {
-			console.log("doit")
 			notesWindow.show()
 		})
 	} else {
@@ -241,14 +216,12 @@ function createLauncherWindow() {
 			resizable: false 
 		})
 		launcherWindow.once('ready-to-show', function() {
-			console.log("ready-to-show")
 			launcherWindow.show()
 		})	
 		launcherWindow.loadURL(`file://${__dirname}/launcher.html`)
 		launcherWindow.on('blur', function() {
 			launcherWindow.hide()
 		})
-	
 	} else {
 		launcherWindow.show()
 	}
@@ -279,11 +252,35 @@ function createHelpWindow() {
 			helpWindow = null
 		})		
 		helpWindow.once('ready-to-show', function() {
-			console.log("ready-to-show")
 			helpWindow.show()
 		})
 	} else {
 		helpWindow.show()
+	}
+}
+
+function createReminderWindow(notes) {
+	if(!reminderWindow) {
+		reminderWindow = new BrowserWindow({
+			show: false,
+			width: 800,
+			height: 600,
+			maximizable: false,
+			resizable: false,
+			icon: path.join(__dirname, "assets/img/crispyfish.png")
+		})
+		reminderWindow.setMenu(null)
+		reminderWindow.webContents.openDevTools()
+		reminderWindow.loadURL(`file://${__dirname}/reminder.html`)
+		reminderWindow.on('close', function() {
+			reminderWindow = null
+		})
+		reminderWindow.once('ready-to-show', function() {
+			reminderWindow.show()
+			reminderWindow.webContents.send('show-reminder', notes)	
+		})
+	} else {
+		reminderWindow.webContents.send('show-reminder', notes)
 	}
 }
 
@@ -311,6 +308,16 @@ function createAboutWindow() {
 	} else {
 		aboutWindow.show()
 	}
+}
+
+function quitApp() {
+	appIcon.destroy()
+	if(launcherWindow) launcherWindow.close()
+	if(reminderWindow) reminderWindow.close()
+	if(settingsWindow) settingsWindow.close()
+	if(helpWindow) helpWindow.close()
+	if(aboutWindow) aboutWindow.close()	
+	if(notesWindow) notesWindow.close()
 }
 
 app.on('window-all-closed', () => {
@@ -360,36 +367,45 @@ ipc.on('settings-cancelled', () => {
 	settingsWindow = null
 })
 
-ipc.on('register-shortcut', function(event, args) {
+ipc.on('register-shortcut', (event, args) => {
 	registerShortcut(args)
 })
 
-ipc.on('note-manager', function(event, args) {
+ipc.on('note-manager', (event, args) => {
 	createNotesWindow()
 })
 
-ipc.on('show-settings', function(event, args) {
+ipc.on('show-settings', (event, args) => {
 	createSettingsWindow()
 })
 
-ipc.on('snip-it', function(event, args) {
+ipc.on('snip-it', (event, args) => {
 	createSnipWindow()
 })
 
-ipc.on('show-help', function(event, args) {
+ipc.on('show-help', (event, args) => {
 	createHelpWindow()
 })
 
-ipc.on('show-about', function(event, args) {
+ipc.on('show-about', (event, args) => {
 	createAboutWindow()
 })
 
-ipc.on('quit', function(event, args) {
-	appIcon.destroy()
-	app.exit(0)
+ipc.on('show-reminder', (event, args) => {
+	createReminderWindow(args)
 })
 
-ipc.on('dict', function(event, args) {
+ipc.on('quit', (event, args) => {
+	quitApp()
+})
+
+ipc.on('dict', (event, args) => {
 	console.log(args)
 	createDictWindow(args)
+})
+
+ipc.on('dismiss-reminder', (event, args) => {
+	if(notesWindow) {
+		notesWindow.webContents.send('dismiss-reminder', args)
+	}
 })

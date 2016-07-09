@@ -46,43 +46,57 @@
               <a ng-show="isEditMode" class="close" href="" ng-click="resetNote()"><i class="material-icons">close</i></a>
               <div class="card-content" ng-class="note.color != '' ? note.color + ' lighten-2' : ''">
                 <div class="row">
-                  <div class="col s10">
-                    <div class="input-field">
-                      <ul id="remindme" class="dropdown-content" style="width:250px;">
-                        <li><a href="">Tomorrow<span class="badge">08:00</span></a></li>
-                        <li><a href="">Next week<span class="badge">08:00</span></a></li>
-                        <li><a href="">choose date and time<span class="badge"><i class="material-icons">date_range</i></span></a></li>
-                      </ul>
-                      <a class="dropdown-button" href="" data-activates="remindme"><i class="material-icons">date_range</i></a>
-                      <ul id="colorize" class="dropdown-content" style="width:100px;">
-                        <li>
-                          <a ng-click="setColorNote('')" href="" class="white"></a>
-                          <a ng-click="setColorNote('green')" href="" class="green lighten-2"></a>
-                          <a ng-click="setColorNote('yellow')" href="" class="yellow lighten-2"></a>
-                          <a ng-click="setColorNote('blue')" href="" class="blue lighten-2"></a>
-                          <a ng-click="setColorNote('red')" href="" class="red lighten-2"></a>
-                          <a ng-click="setColorNote('pink')" href="" class="pink lighten-2"></a>
-                        </li>
-                      </ul>
-                      <a class="dropdown-button" href="" data-activates="colorize"><i class="material-icons">colorize</i></a>
-                    </div>                    
-                  </div>
-                </div>
-                <div class="row">
                   <div class="col s6">
                     <input type="text" ng-model="note.title" id="note-title" placeholder="Write a note" ng-focus="isEditMode = true" ng-change="scrapeUrl()" ng-model-options='{ debounce: 4000 }' />
                   </div>
                 </div>
-                <div ng-show="note.type == 'url'" class="card-panel grey lighten-5 z-depth-1">
-                  <strong>{{note.pagetitle}}</strong><br />
-                  {{note.url}}
+                <div class="row" ng-show="note.type == 'url'">
+                  <div class="card-panel grey lighten-5 z-depth-1">
+                    <strong>{{note.pagetitle}}</strong><br />
+                    {{note.url}}
+                  </div>
                 </div>
                 <div class="row" ng-show="isEditMode">                          
                   <div class="input-field col s8">
                     <textarea ng-model="note.text" class="materialize-textarea" ng-focus="isEditMode = true" placeholder="additional text here"></textarea>
                   </div>
-                  <div class="input-field col s4">
+                </div>
+                <div class="row" ng-show="isEditMode">  
+                  <div class="col s6">
+                    <ul id="remindme" class="dropdown-content" style="width:250px;">
+                      <li><a href="" ng-click="addReminder('test')">Test (10 seconds)</a></li>
+                      <li><a href="" ng-click="addReminder('tomorrow')">Tomorrow<span class="badge">08:00</span></a></li>
+                      <li><a href="" ng-click="addReminder('week')">Next week<span class="badge">08:00</span></a></li>
+                      <li><a href="" ng-click="addReminder('custom')">choose date and time<span class="badge"><i class="material-icons">date_range</i></span></a></li>
+                    </ul>
+                    <a class="dropdown-button" href="" data-activates="remindme"><i class="material-icons tiny">date_range</i></a>
+                    &nbsp;&nbsp;
+                    <ul id="colorize" class="dropdown-content" style="width:100px;">
+                      <li>
+                        <a ng-click="setColorNote('')" href="" class="white"></a>
+                        <a ng-click="setColorNote('green')" href="" class="green lighten-2"></a>
+                        <a ng-click="setColorNote('yellow')" href="" class="yellow lighten-2"></a>
+                        <a ng-click="setColorNote('blue')" href="" class="blue lighten-2"></a>
+                        <a ng-click="setColorNote('red')" href="" class="red lighten-2"></a>
+                        <a ng-click="setColorNote('pink')" href="" class="pink lighten-2"></a>
+                      </li>
+                    </ul>
+                    <a class="dropdown-button" href="" data-activates="colorize"><i class="material-icons tiny">colorize</i></a>
+                  </div>
+                  <div class="col s6 right-align">
                     <input type="submit" class="waves-effect waves-light btn light-blue darken-3" value="Save" />
+                  </div>
+                </div>
+                <div class="row" ng-show="note.reminder">
+                  <div class="card-panel grey lighten-5" style="padding:10px">
+                    <div class="row">
+                      <div class="col s11">
+                        <span style="display:inline-flex;vertical-align:middle;"><i class="material-icons">access_time</i>&nbsp;{{note.reminder | reminder}}</span>
+                      </div>
+                      <div class="col s1">
+                        <a href="" ng-click="deleteReminder()"><i class="material-icons">close</i></a>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -153,6 +167,13 @@
       <div class="modal-content">
         <h4>{{modal.title}}</h4>
         <p ng-show="modal.text" style="white-space:pre-line;">{{modal.text}}</p>
+      </div>
+    </div>
+
+    <div id="reminder" class="modal">
+      <div class="modal-content">
+        <h4>Reminder</h4>
+        <input type="date" class="datepicker">
       </div>
     </div>
 

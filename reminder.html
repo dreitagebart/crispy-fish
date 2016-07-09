@@ -1,0 +1,40 @@
+<!doctype html>
+<html ng-app="app" ng-controller="RemindCtrl" ng-cloak>
+	<head>
+		<meta charset="utf-8">
+		<title>Reminder</title>
+		<link rel="stylesheet" href="assets/lib/Materialize/dist/css/materialize.min.css">
+		<link rel="stylesheet" href="assets/css/style.css">	
+    <link rel="stylesheet" ng-href="assets/css/theme/{{settings.layout.theme}}.css">		
+	</head>
+	<body>
+
+    <div class="container">
+      <ul class="collapsible" data-collapsible="accordion">
+        <li ng-repeat="note in notes">
+          <div class="collapsible-header">
+            <div class="row">
+              <div class="col s11">
+                <i class="material-icons">access_time</i> {{note.title}}
+              </div>
+              <div class="col s1 center-align">
+                <a href="" ng-click="dismissReminder(note.id)"><i class="material-icons">close</i></a>
+              </div>
+            </div>
+          </div>            
+          <div class="collapsible-body" ng-show="note.content">
+            <p>{{note.content}}</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+    
+		<script>window.$ = window.jQuery = require('./assets/lib/jquery/dist/jquery.min.js')</script>
+    <script src="assets/lib/hammerjs/hammer.min.js"></script>
+		<script src="assets/lib/Materialize/dist/js/materialize.min.js"></script>
+		<script src="assets/lib/angular/angular.min.js"></script>
+    <script src="assets/lib/angular-marked/dist/angular-marked.min.js"></script>
+    <script src="assets/js/services.js"></script>
+    <script src="assets/js/reminder.js"></script>
+	</body>
+</html>

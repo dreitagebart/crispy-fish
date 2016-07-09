@@ -51,15 +51,15 @@ angular.module('app.services', [])
 })
 
 .factory('NotesProvider', function() {
-  
   var NotesProvider
   var key
+  const Xray = require('x-ray')
   const Dexie = require('dexie')
-  const Xray = require('x-ray');
+
   var db = new Dexie('crispydb')
   
   db.version(1).stores({
-    notes: '++id, created, title, text, color, type, url, done'
+    notes: '++id, created, title, text, color, type, url, done, reminder, remindme, reminded'
   })
 
   db.open().catch(function(error) {
@@ -73,6 +73,11 @@ angular.module('app.services', [])
   }
 
   // public
+  NotesProvider.getRemindableNotes = function() {
+    var remindable = db.notes.toArray()
+    return remindable
+  }
+
   NotesProvider.addNote = function(note) {
     var object = getNoteObject()
     for(key in note) {
@@ -92,6 +97,17 @@ angular.module('app.services', [])
     db.notes.where('id').equals(id).delete()
   }
 
+  NotesProvider.dismissReminder = function(id) {
+    debugger
+    db.notes.update(id, {reminded: 1}).then(function(updated) {
+      if(updated) {
+        console.log(`note id ${id} updated`)
+      } else {
+        console.log(`could not update note id ${id}`)
+      }
+    })
+  }
+
   // private
   function getNoteObject() {
     return {
@@ -100,7 +116,10 @@ angular.module('app.services', [])
       type: "text",
       color: "",
       url: "",
-      created: Date.now()
+      created: Date.now(),
+      reminder: "",
+      remindme: 0,
+      reminded: 0
     }
   }
 
